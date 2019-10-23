@@ -9,12 +9,12 @@ The purspoe of this package is to provide easy for use functionality to apply da
 
 Install package from github using `devtools` package
 
-```{r}
+```R
 devtools::install_github(repo = "EvgenyPetrovsky/dataque")
 ```
 
 define test data-set
-```{r}
+```R
 library(magrittr)
 library(deeque)
 
