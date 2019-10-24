@@ -11,6 +11,9 @@ add_check <- function(group, new_check) {
 
 # create new check
 new_check <- function(severity, function_name, ...) {
+    if (typeof(function_name) == "closure") {
+        function_name = as.character(substitute(function_name))
+    }
     list(
         severity = severity,
         function_name = function_name,
@@ -20,13 +23,22 @@ new_check <- function(severity, function_name, ...) {
 
 # execute check
 run_check <- function(data, check) {
-    fun_call <- call(c(check$function_name, check$parameters))
-    res <- eval(fun_call)
+    fun <- check$function_name
+    par <- check$parameters
+    par$data = data
+    res <- do.call(fun, par)
     list(
         severity = check$severity,
         function_name = check$function_name,
-        check_column = check$parameters$column_name,
+        check_column = check$parameters$column,
         scope_size = length(res),
         score = ratio(res)
     )
+}
+
+
+checks_to_data_frame <- function(group) {
+    group %>%
+        Reduce(f = rbind, init = list()) %>%
+        as.data.frame(stringsAsFactors = FALSE)
 }

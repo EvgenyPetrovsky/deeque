@@ -32,56 +32,51 @@ ratio <- function(logical_vector) {
 #------------------------------------------------------------------------------#
 # Metadata checks
 
-frame_hasColumn <- function(data, column_name) {
-    if (column_name %in% colnames(data)) {
-        TRUE
-    } else {
-        FALSE
-    }
+hasRowCount <- function(data, udf) {
+  n <- nrow(data)
+  udf(n)
 }
 
-frame_hasColumns <- function(data, column_names) {
-    result = (column_names %in% colnames(data))
-    min(result)
+hasColumnCount <- function(data, udf) {
+  n <- ncol(data)
+  udf(n)
 }
 
-frame_hasColumnOfType <- function(data, column_name, column_type = c("Date", "numeric", "integer", "logical", "character", "factor")) {
-    column_type <- match_par(column_type)
-    stop_if_miss_columns(data, column_name)
-    with(list(values = data[["column_name"]]), {
-        if (column_type == "Date" && is.numeric.Date(col)) {TRUE}
-        else if (column_type == "numeric" && is.numeric(col)) {TRUE}
-        else if (column_type == "integer" && is.integer(col)) {TRUE}
-        else if (column_type == "logical" && is.logical(col)) {TRUE}
-        else if (column_type == "character" && is.character(col)) {TRUE}
-        else if (column_type == "factor" && is.factor(col)) {TRUE}
-        else {FALSE}
-    })
+hasColumn <- function(data, column) {
+  column[1] %in% colnames(data)
 }
 
-frame_hasNumnberOfRows <- function(data, min_rows = NULL, max_rows = NULL) {
-    if (is.null(min_rows) & is.null(max_rows)) {
-        stop(paste("at least one of 'min_rows', 'max_rows'  must be specified for number of rows check"))
-    }
-    n <- nrow(data)
-    if (!is.null(min_rows) & n < min_rows) {
-        return(FALSE)
-    }
-    if (!is.null(max_rows) & n > max_rows) {
-        return(FALSE)
-    }
-    TRUE
+hasColumns <- function(data, columns) {
+  result = (columns %in% colnames(data))
+  min(result)
 }
 
-frame_hasUniqueKey <- function(data, columns_names){
-    col_diff <- setdiff(column_names, colnames(data))
-    col_text <- paste(paste("'", col_diff, "'", sep = ""), collapse = ", ")
-    if (length() > 0) {
-        stop(paste("columns", col_text, "are not present in data frame"))
-    }
-    n0 <- nrow(data)
-    n1 <- nrow(subset(data, select = column_names))
-    if (n0 == n1) {TRUE} else {FALSE}
+hasColumnOfType <- function(
+  data, column,
+  type = c("Date", "numeric", "integer", "logical", "character", "factor")
+) {
+  type <- match.arg(type)
+  stop_if_miss_columns(data, column)
+  with(list(col = data[["column"]]), {
+    if (type == "Date" && is.numeric.Date(col)) {TRUE}
+    else if (type == "numeric" && is.numeric(col)) {TRUE}
+    else if (type == "integer" && is.integer(col)) {TRUE}
+    else if (type == "logical" && is.logical(col)) {TRUE}
+    else if (type == "character" && is.character(col)) {TRUE}
+    else if (type == "factor" && is.factor(col)) {TRUE}
+    else {FALSE}
+  })
+}
+
+hasUniqueKey <- function(data, columns){
+  col_diff <- setdiff(columns, colnames(data))
+  col_text <- paste(paste("'", col_diff, "'", sep = ""), collapse = ", ")
+  if (length() > 0) {
+    stop(paste("columns", col_text, "are not present in data frame"))
+  }
+  n0 <- nrow(data)
+  n1 <- nrow(subset(data, select = columns))
+  if (n0 == n1) {TRUE} else {FALSE}
 }
 
 #------------------------------------------------------------------------------#
