@@ -82,110 +82,163 @@ hasUniqueKey <- function(data, columns){
 #------------------------------------------------------------------------------#
 # Value checks
 
-# completeness
+# check that there are no missing values in a column
 isComplete <- function(data, column) {
   stop_if_miss_columns(data, column)
   !is.na(data[[column]])
 }
 
+# custom validation of the fraction of missing values in a column
 hasCompleteness <- function(data, column, udf) {
   udf(isComplete(data, column))
 }
 
-# consistency
+# check that there are no duplicates in a column
 isUnique <- function(data, column) {
     stop_if_miss_columns()
     # index of 1st duplicated element (0 - no duplicates)
     idx <- anyDuplicated(data[[column]])
     idx == 0
 }
+
+# custom validation of the unique value ratio in a column
 hasUniqueness <- function(data, column, udf) {
-    stop_if_not_implemented("hasUniqueness", not_implemented = TRUE)
+    ds <- duplicated(data[[column]])
+    uniqueness <- mean(ds == FALSE)
+    udf(uniqueness)
+    #stop_if_not_implemented("hasUniqueness", not_implemented = TRUE)
 }
 hasDistinctness <- function(data, column, udf) {
     stop_if_not_implemented("hasDistinctness", not_implemented = TRUE)
 }
+
+# validation of the fraction of values that are in a valid range
 isInLOV <- function(data, column, lov) {
     stop_if_miss_columns(data, column)
     data[[column]] %in% lov
 }
+isInRange <- function(data, column, range) {isInLOV(data, column, range)}
+
+# validation of the largest fraction of values that have the same type
 hasConsistentType <- function(data, column) {
-    stop("function hasConsistentType is not yet implemented")
+    stop_if_not_implemented("hasConsistentType", not_implemented = TRUE)
 }
+
+# validation whether all values in a numeric column are non-negative
 isNonNegative <- function(data, column) {
-    stop("function isNonNegative is not yet implemented")
+    stop_if_miss_columns(data, column)
+    data[[column]] >= 0
 }
-isLessThan <- function(data, column, ref_column) {
+
+# validation whether values in the 1s column are less than in the 2nd column
+isLessThan <- function(data, column, ref_column, value) {
     stop_if_miss_columns(data, c(column, ref_column))
-    column <- ref_column
-    stop("function isLessThan is not yet implemented")
+    data[[column]] < data[[ref_column]]
 }
-satisfies <- function(data, predicate) {
-    stop("function satisfies is not yet implemented")
+
+# validation whether values in the 1s column are not less than in the 2nd column
+isNotLessThan <- function(data, column, ref_column) {
+    stop_if_miss_columns(data, c(column, ref_column))
+    data[[column]] >= data[[ref_column]]
+}
+
+# validation whether values in the 1s column are greater than in the 2nd column
+isGreaterThan <- function(data, column, ref_column) {
+    stop_if_miss_columns(data, c(column, ref_column))
+    data[[column]] > data[[ref_column]]
+}
+
+# validation whether values in the 1s column are not greater than in the 2nd column
+isNotGreaterThan <- function(data, column, ref_column) {
+    stop_if_miss_columns(data, c(column, ref_column))
+    data[[column]] <= data[[ref_column]]
+}
+
+# validation whether column has values that satisfy predicate and uder defined function
+hasValue <- function(data, column, predicate, udf = NULL) {
+    stop_if_miss_columns(data, column)
+    val <- predicate(data[[column]])
+    if (!is.null(udf)) {
+        udf(ratio(val))
+    } else {
+        ratio(val)
+    }
+}
+
+# validation whether all rows matching 1st predicate also match 2nd predicate
+satisfies <- function(data, predicate, udf = NULL) {
+    stop_if_not_implemented("satisfies", not_implemented = TRUE)
+    
 }
 
 # validation whether all rows matching 1st predicate also match 2nd predicate
 satisfiesIf <- function(data, predicate_1, predicate_2) {
-    stop("function satisfiesIf is not yet implemented")
+    stop_if_not_implemented("satisfiesIf", not_implemented = TRUE)
 }
 
 # user-defined validation of the predictability of a column
 hasPredictability <- function( data, column, ref_columns, udf) {
-    stop("function hasPredictability is not yet implemented")
+    stop_if_not_implemented("hasPredictability", not_implemented = TRUE)
 }
 
 # statistics (can be used to verify dimension consistency)
 
 # custom validation of the number of records
 hasSize <- function(date, udf) {
-    stop("fucntion hasSize is not yet supported")
+    stop_if_not_implemented("hasSize", not_implemented = TRUE)
 }
 
 # custom validation of the maximum fraction of values of the same data type
 hasTypeConsistency <- function(data, column, udf) {
-    stop("fucntion hasTypeConsistency is not yet supported")
+    stop_if_not_implemented("hasTypeConsistency", not_implemented = TRUE)
 }
 
 # custom validation of the number of distinct non-null values in a column
 hasCountDistinct <- function(data, column) {
 
-    stop("fucntion hasCountDistinct is not yet supported")
+    stop_if_not_implemented("hasCountDistinct", not_implemented = TRUE)
 }
 hasApproxCountDistinct <- function(data, column, udf) {
-    stop("fucntion hasApproxCountDistinct is not yet supported")
+    stop_if_not_implemented("hasApproxCountDistinct", not_implemented = TRUE)
 }
+
+# custom validation of a column’s minimum value
 hasMin <- function(data, column, udf) {
     min_val <- min(data[[column]], na.rm = T)
     udf(min_val)
 }
+
+# custom validation of a column’s maximum value
 hasMax <- function(data, column, udf) {
     max_val <- max(data[[column]], na.rm = T)
     udf(max_val)
 }
+
+# custom validation of a column’s mean value
 hasMean <- function(data, column, udf) {
     mean_val <- mean(data[[column]], na.rm = T)
     udf(mean_val)
 }
 hasStandardDeviation <- function(data, column, udf) {
-    stop("fucntion hasStandardDeviation is not yet supported")
+    stop_if_not_implemented("hasStandardDeviation", not_implemented = TRUE)
 }
 hasApproxQuantile <- function(data, column, quantile, udf ) {
-    stop("fucntion hasApproxQuantil is not yet supported")
+    stop_if_not_implemented("hasApproxQuantil", not_implemented = TRUE)
 }
 hasEntropy <- function(data, column, udf) {
-    stop("fucntion hasEntropy is not yet supported")
+    stop_if_not_implemented("hasEntropy", not_implemented = TRUE)
 }
 hasMutualInformation <- function(data, column, ref_column, udf ) {
-    stop("fucntion hasMutualInformation is not yet supported")
+    stop_if_not_implemented("hasMutualInformation", not_implemented = TRUE)
 }
 hasHistogramValue <- function(data, column, udf) {
-    stop("fucntion hasHistogramValue is not yet supported")
+    stop_if_not_implemented("hasHistogramValue", not_implemented = TRUE)
 }
 hasCorrelation <- function(data, column, ref_column, udf) {
-    stop("fucntion hasCorrelation is not yet supported")
+    stop_if_not_implemented("hasCorrelation", not_implemented = TRUE)
 }
 
 # time
 hasNoAnomalies <- function(data, column, metric, detector) {
-    stop("fucntion hasNoAnomalies is not yet supported")
+    stop_if_not_implemented("hasNoAnomalies", not_implemented = TRUE)
 }
