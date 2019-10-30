@@ -14,6 +14,7 @@ devtools::install_github(repo = "EvgenyPetrovsky/dataque")
 ```
 
 define test data-set
+
 ```R
 library(magrittr)
 library(deeque)
@@ -38,7 +39,7 @@ test_df %T>% verify_and_stop(checks, stop_udf = ...) %>% write.table(...)
 
 This data quality framework defines following building blocks:
 
-* `validation-functions` validation functions library - functions that analyze data for data-quality issues;
+* `functions` validation functions library - functions that analyze data for data-quality issues;
 * `checks` set of operations to manage checks; checks are validation functions applied to specific context (with specified column names, severity, user-defined functions that support decision taking about check result;
 * `adapters` set of operations for serialization / deserialization of check results and checks themselves;
 * `verification` set of operations to execute data quality verification and help to take a decision in control flow (like stop if ERROR-severity issues are found).
@@ -46,12 +47,19 @@ This data quality framework defines following building blocks:
 ## standard user flow
 
 User has a dataset and needs to ensure that its shape and content meets requirements. For this reason:
+
 1. User specified dq checks by describing them in a declarative way one by one. Checks themselves are instructions that are applied later to data checks are combined in groups.
 2. User might decide to export check groups and load them later for future use or for sharing with others.
 3. User runs verification by saying what group of checks needs to be applied to dataset.
 
-Results of execution may be: 
+Results of execution may be:
 
 * report that describes checks and fraction of valid records
 * termination of workflow execution with information written into standard output
 * continuation of process with warning messages / no messages and all if findings have severity lower that needs to be reported
+
+## important information about functions
+
+Some functions operate with statistics (like min, max, uniqueness ratio) and can return only one value, this can be TRUE / FALSE or ratio (between 0 and 1). Others operate on lower lever and applied to every value. They return logical vector of values. Both of these cases may be properly treated by basic data.frame functionality and data manipulation packages such as dlpyr. It is up to user to decide what result to use. 
+
+However, when implementing functions, one should think what is proper result and either return vector for every row that was checked or return 1 value. There is no reason to replicate one value to number of rows.
