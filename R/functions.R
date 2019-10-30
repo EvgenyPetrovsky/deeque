@@ -34,21 +34,25 @@ ratio <- function(logical_vector) {
 
 hasRowCount <- function(data, udf) {
   n <- nrow(data)
-  udf(n)
+  r <- udf(n)
+  r
 }
 
 hasColumnCount <- function(data, udf) {
   n <- ncol(data)
-  udf(n)
+  r <- udf(n)
+  r
 }
 
 hasColumn <- function(data, column) {
-  column[1] %in% colnames(data)
+  r <- column[1] %in% colnames(data)
+  r
 }
 
 hasColumns <- function(data, columns) {
   result = (columns %in% colnames(data))
-  min(result)
+  r <- min(result)
+  r
 }
 
 hasColumnOfType <- function(
@@ -57,15 +61,16 @@ hasColumnOfType <- function(
 ) {
   type <- match.arg(type)
   stop_if_miss_columns(data, column)
-  with(list(col = data[["column"]]), {
-    if (type == "Date" && is.numeric.Date(col)) {TRUE}
-    else if (type == "numeric" && is.numeric(col)) {TRUE}
-    else if (type == "integer" && is.integer(col)) {TRUE}
-    else if (type == "logical" && is.logical(col)) {TRUE}
-    else if (type == "character" && is.character(col)) {TRUE}
-    else if (type == "factor" && is.factor(col)) {TRUE}
+  r <- with(list(col = data[[column]]), {
+    if (type == "Date" & is.numeric.Date(col)) {TRUE}
+    else if (type == "numeric" & is.numeric(col)) {TRUE}
+    else if (type == "integer" & is.integer(col)) {TRUE}
+    else if (type == "logical" & is.logical(col)) {TRUE}
+    else if (type == "character" & is.character(col)) {TRUE}
+    else if (type == "factor" & is.factor(col)) {TRUE}
     else {FALSE}
   })
+  r
 }
 
 hasUniqueKey <- function(data, columns){
@@ -76,7 +81,8 @@ hasUniqueKey <- function(data, columns){
   }
   n0 <- nrow(data)
   n1 <- nrow(subset(data, select = columns))
-  if (n0 == n1) {TRUE} else {FALSE}
+  r <- if (n0 == n1) {TRUE} else {FALSE}
+  r
 }
 
 #------------------------------------------------------------------------------#
@@ -90,7 +96,10 @@ isComplete <- function(data, column) {
 
 # custom validation of the fraction of missing values in a column
 hasCompleteness <- function(data, column, udf) {
-  udf(isComplete(data, column))
+    stop_if_miss_columns(data, column)
+    stat <- mean(!is.na(data[[column]]))
+    r <- udf(stat)
+    r
 }
 
 # check that there are no duplicates in a column
@@ -98,24 +107,38 @@ isUnique <- function(data, column) {
     stop_if_miss_columns()
     # index of 1st duplicated element (0 - no duplicates)
     idx <- anyDuplicated(data[[column]])
-    idx == 0
+    r <- idx == 0
+    r
 }
 
 # custom validation of the unique value ratio in a column
 hasUniqueness <- function(data, column, udf) {
-    ds <- duplicated(data[[column]])
-    uniqueness <- mean(ds == FALSE)
-    udf(uniqueness)
-    #stop_if_not_implemented("hasUniqueness", not_implemented = TRUE)
+    # Uniqueness: |{v ∈ V | cv = 1}| / |V|
+    vals <- data[[column]]
+    dup_ids <- duplicated(vals)
+    V <- unique(vals)
+    d <- unique(vals[dup_ids])
+    v <- V[!V %in% d]
+    uniqueness <- length(v) / length(V)
+    r <- udf(uniqueness)
+    r
 }
+
+
 hasDistinctness <- function(data, column, udf) {
-    stop_if_not_implemented("hasDistinctness", not_implemented = TRUE)
+    # Distinctness: |V| / N
+    vals <- data[[column]]
+    V <- unqiue(vals)
+    distinctness <- length(V) / length(vals)
+    r <- udf(distinctness)
+    r
 }
 
 # validation of the fraction of values that are in a valid range
 isInLOV <- function(data, column, lov) {
     stop_if_miss_columns(data, column)
-    data[[column]] %in% lov
+    r <- data[[column]] %in% lov
+    r
 }
 isInRange <- function(data, column, range) {isInLOV(data, column, range)}
 
@@ -127,53 +150,75 @@ hasConsistentType <- function(data, column) {
 # validation whether all values in a numeric column are non-negative
 isNonNegative <- function(data, column) {
     stop_if_miss_columns(data, column)
-    data[[column]] >= 0
+    r <- data[[column]] >= 0
+    r
 }
 
 # validation whether values in the 1s column are less than in the 2nd column
 isLessThan <- function(data, column, ref_column, value) {
     stop_if_miss_columns(data, c(column, ref_column))
-    data[[column]] < data[[ref_column]]
+    r <- data[[column]] < data[[ref_column]]
+    r
 }
 
 # validation whether values in the 1s column are not less than in the 2nd column
 isNotLessThan <- function(data, column, ref_column) {
     stop_if_miss_columns(data, c(column, ref_column))
-    data[[column]] >= data[[ref_column]]
+    r <- data[[column]] >= data[[ref_column]]
+    r
 }
 
 # validation whether values in the 1s column are greater than in the 2nd column
 isGreaterThan <- function(data, column, ref_column) {
     stop_if_miss_columns(data, c(column, ref_column))
-    data[[column]] > data[[ref_column]]
+    r <- data[[column]] > data[[ref_column]]
+    r
 }
 
 # validation whether values in the 1s column are not greater than in the 2nd column
 isNotGreaterThan <- function(data, column, ref_column) {
     stop_if_miss_columns(data, c(column, ref_column))
-    data[[column]] <= data[[ref_column]]
+    r <- data[[column]] <= data[[ref_column]]
+    r
 }
 
 # validation whether column has values that satisfy predicate and uder defined function
-hasValue <- function(data, column, predicate, udf = NULL) {
+hasValue <- function(data, column, predicate) {
     stop_if_miss_columns(data, column)
-    val <- predicate(data[[column]])
-    if (!is.null(udf)) {
-        udf(ratio(val))
-    } else {
-        ratio(val)
-    }
+    r <- predicate(data[[column]])
+    r
+
+}
+
+# validation whether all values from list present in column
+hasAllValues <- function(data, column, lov) {
+    unique_vals <- unique(data[[column]])
+    missing_vals <- setdiff(lov, unique_vals)
+    r <- length(missing_vals) == 0
+    r
+}
+
+# validation whether all values from list present in column
+hasAnyValue <- function(data, column, lov) {
+    unique_vals <- unique(data[[column]])
+    present_vals <- unique_vals %in% lov
+    r <- sum(present_vals) > 0
+    r
 }
 
 # validation whether all rows matching 1st predicate also match 2nd predicate
-satisfies <- function(data, predicate, udf = NULL) {
-    stop_if_not_implemented("satisfies", not_implemented = TRUE)
-    
+satisfies <- function(data, predicate) {
+    r <- predicate(data)
+    r
 }
 
 # validation whether all rows matching 1st predicate also match 2nd predicate
 satisfiesIf <- function(data, predicate_1, predicate_2) {
-    stop_if_not_implemented("satisfiesIf", not_implemented = TRUE)
+    r1 <- predicate_1(data)
+    r2 <- predicate_2(data)
+    r1[r1 == FALSE] <- NA
+    r <- r1 & r2
+    r
 }
 
 # user-defined validation of the predictability of a column
@@ -184,8 +229,10 @@ hasPredictability <- function( data, column, ref_columns, udf) {
 # statistics (can be used to verify dimension consistency)
 
 # custom validation of the number of records
-hasSize <- function(date, udf) {
-    stop_if_not_implemented("hasSize", not_implemented = TRUE)
+hasSize <- function(data, udf) {
+    size <- nrow(data)
+    r <- udf(size)
+    r
 }
 
 # custom validation of the maximum fraction of values of the same data type
@@ -194,9 +241,12 @@ hasTypeConsistency <- function(data, column, udf) {
 }
 
 # custom validation of the number of distinct non-null values in a column
-hasCountDistinct <- function(data, column) {
-
-    stop_if_not_implemented("hasCountDistinct", not_implemented = TRUE)
+hasCountDistinct <- function(data, column, udf) {
+    stop_if_miss_columns(data, column)
+    vals <- data[[column]]
+    V <- unique(vals[!is.na(vals)])
+    r <- udf(V)
+    r
 }
 hasApproxCountDistinct <- function(data, column, udf) {
     stop_if_not_implemented("hasApproxCountDistinct", not_implemented = TRUE)
@@ -219,23 +269,68 @@ hasMean <- function(data, column, udf) {
     mean_val <- mean(data[[column]], na.rm = T)
     udf(mean_val)
 }
+
+# custom validation of a column’s standard deviation
 hasStandardDeviation <- function(data, column, udf) {
-    stop_if_not_implemented("hasStandardDeviation", not_implemented = TRUE)
+    stdev <- sd(data[[column]])
+    r <- udf(stdev)
+    r
 }
+
+# custom validation of a particular quantile of a column (approx.)
 hasApproxQuantile <- function(data, column, quantile, udf ) {
     stop_if_not_implemented("hasApproxQuantil", not_implemented = TRUE)
 }
+
+# custom validation of a column’s entropy
 hasEntropy <- function(data, column, udf) {
-    stop_if_not_implemented("hasEntropy", not_implemented = TRUE)
+    vals <- data[[column]]
+    # dataset size
+    N <- length(vals)
+    # unique values as vector names and their counts as vector values
+    NV <- table(vals)
+    func <- function(x) {
+        cv <- length(NV[as.character()])
+        size <- N
+        return(cv/size * log(cv/size))
+    }
+    entropy <- sum(sapply(FUN = func, X = names(NV)))
+    r <- udf(entropy)
+    r
 }
+
+# 
 hasMutualInformation <- function(data, column, ref_column, udf ) {
-    stop_if_not_implemented("hasMutualInformation", not_implemented = TRUE)
+    vals1 <- data[[column]]
+    vals2 <- data[[ref_column]]
+    # dataset size
+    N <- length(vals1)
+    # unique values as vector names and their counts as vector values
+    NV1 <- table(vals1)
+    NV2 <- table(vals2)
+    pairs <- list()
+    #func <- function(x){
+    #    cv <- length(NV[as.character()])
+    #    size <- N
+    #    return(cv/size * log(cv/size))
+    #}
+
+
+    r <- udf(mutual_info)
 }
+
+# custom validation of a column pair’s mutual information
 hasHistogramValue <- function(data, column, udf) {
     stop_if_not_implemented("hasHistogramValue", not_implemented = TRUE)
 }
+
+# custom validation of a column pair’s correlation
 hasCorrelation <- function(data, column, ref_column, udf) {
-    stop_if_not_implemented("hasCorrelation", not_implemented = TRUE)
+    vals <- data[[column]]
+    ref_vals <- data[[ref_column]]
+    c <- corr(vals, ref_vals)
+    r <- udf(c)
+    r
 }
 
 # time
