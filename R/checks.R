@@ -1,33 +1,65 @@
-# create new group of checks
+#' Create new group of checks
+#'
+#' @export
 new_group <- function() {
     list()
 }
 
-# add check into group
+#' Add check into group
+#'
+#' @export
+#'
+#' @param group group of checks where new check needs to be added
+#' @param new_check new check defined by \code{new_check} function
 add_check <- function(group, new_check) {
     c(group, list(new_check))
 
 }
 
-# create new check
-new_check <- function(severity, function_name, ...) {
+#' Create new check
+#'
+#' Function takes parameters and returns data structure that represents check
+#' and can de included into group and then executed
+#'
+#' @export
+#'
+#' @param description check description expressed in understandable way.
+#' it should give good idea of a purpose of the check. Description should define
+#' condition that data must meet. Like "Country must be always filled".
+#' Good practice is to a) start with name of subject of check b) give clear and
+#' concise criteria c) specify when it is applicable (if not always)
+#' @param severity check severity, can be chosen from `severity` list attached
+#' to package
+#' @param function_name validation function name - text or function (without parameters)
+#'
+new_check <- function(description, severity, function_name, ...) {
     if (typeof(function_name) == "closure") {
         function_name = as.character(substitute(function_name))
     }
     list(
+        description = description,
         severity = severity,
         function_name = function_name,
         parameters = list(...)
     )
 }
 
-# execute check
+#' Execute check one check on data
+#'
+#' Function executes check on given data and creates data structure (list) with
+#' check summary
+#'
+#' @export
+#'
+#' @param data dataset to be checked
+#' @param check check to apply - use \code{new_check} function to create a check
 run_check <- function(data, check) {
     fun <- check$function_name
     par <- check$parameters
     par$data = data
     res <- do.call(fun, par)
     list(
+        description = description,
         severity = check$severity,
         function_name = check$function_name,
         check_column = check$parameters$column,
