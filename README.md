@@ -32,7 +32,12 @@ checks <- new_group() %>%
 test_df %>% verify(checks)
 
 # another option verify; stop execution if stop condition is achieved
-test_df %T>% verify_and_stop(checks, stop_udf = ...) %>% write.table(...)
+test_df %>%
+  run_checks_and_proceed(
+    checks,
+    condition = severity_under_threshold(severity$WARNING)) %>%
+  do_something_meaningful() %>%
+  write.table(...)
 ```
 
 ## structure
