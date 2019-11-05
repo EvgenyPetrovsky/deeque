@@ -2,10 +2,17 @@
 % Please edit documentation in R/validation-functions-column.R
 \name{col_hasAnyValue}
 \alias{col_hasAnyValue}
-\title{validation whether all values from list present in column}
+\title{Any of values from list present in column}
 \usage{
 col_hasAnyValue(data, column, lov)
 }
+\arguments{
+\item{data}{dataframe}
+
+\item{column}{column name}
+
+\item{lov}{list of values given as vector}
+}
 \description{
-validation whether all values from list present in column
+Any of values from list present in column
 }

@@ -2,10 +2,17 @@
 % Please edit documentation in R/validation-functions-column.R
 \name{col_hasCountDistinct}
 \alias{col_hasCountDistinct}
-\title{custom validation of the number of distinct non-null values in a column}
+\title{Has number of distinct non-null values}
 \usage{
 col_hasCountDistinct(data, column, udf)
 }
+\arguments{
+\item{data}{dataframe}
+
+\item{column}{column name}
+
+\item{udf}{function that takes number and returns logical value}
+}
 \description{
-custom validation of the number of distinct non-null values in a column
+Has number of distinct non-null values
 }

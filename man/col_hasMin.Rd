@@ -2,10 +2,17 @@
 % Please edit documentation in R/validation-functions-column.R
 \name{col_hasMin}
 \alias{col_hasMin}
-\title{custom validation of a column’s minimum value}
+\title{Has minimum value}
 \usage{
 col_hasMin(data, column, udf)
 }
+\arguments{
+\item{data}{dataframe to check}
+
+\item{column}{column name to check}
+
+\item{udf}{user-defined function to apply to minimum value found}
+}
 \description{
-custom validation of a column’s minimum value
+Has minimum value
 }

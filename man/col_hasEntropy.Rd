@@ -6,6 +6,13 @@
 \usage{
 col_hasEntropy(data, column, udf)
 }
+\arguments{
+\item{data}{dataframe to check}
+
+\item{column}{column name to check}
+
+\item{udf}{user-defined function to apply to quantile found}
+}
 \description{
 custom validation of a column’s entropy
 }

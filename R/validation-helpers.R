@@ -6,7 +6,8 @@
 #' @export
 #' @param x - value to compare with.
 #'
-#' @example hasMean(data = data.frame(col1 = [0:10]), udf = udf_gt(0))
+#' @examples
+#' hasMean(data = data.frame(col1 = [0:10]), udf = udf_gt(0))
 udf_gt <- function(x) {
     function(value) {value > x}
 }

@@ -72,6 +72,7 @@ col_hasUniqueness <- function(data, column, udf) {
 #' @param udf user-defined function that takes ratio and returns logical value
 col_hasDistinctness <- function(data, column, udf) {
     # Distinctness: |V| / N
+    stop_if_miss_columns(data, column)
     vals <- data[[column]]
     V <- unqiue(vals)
     distinctness <- length(V) / length(vals)
@@ -79,7 +80,8 @@ col_hasDistinctness <- function(data, column, udf) {
     r
 }
 
-#' Value belongs to list of values
+#' Value is contained in a list of predefined values
+#'
 #' @export
 #' @param data dataframe
 #' @param column column name
@@ -90,15 +92,17 @@ col_isInLOV <- function(data, column, lov) {
     r
 }
 
-#' Value belongs to list of values
+#' Value is contained in a list of predefined values
 #'
 #' Compatibility function that calls isInLOV
 #'
 #' @export
 #' @param data dataframe
 #' @param column column name
-#' @param lov list of values given as vector
-col_isInRange <- function(data, column, range) {isInLOV(data, column, range)}
+#' @param alloved_values list of values given as vector
+col_isContainedIn <- function(data, column, alloved_values) {
+    isInLOV(data, column, alloved_values)
+}
 
 #' The largest fraction of values has the same type
 #'
@@ -175,9 +179,12 @@ col_hasValue <- function(data, column, predicate) {
 
 }
 
-#' validation whether all values from list present in column
+#' All values from list present in column
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param lov list of values given as vector
 col_hasAllValues <- function(data, column, lov) {
     unique_vals <- unique(data[[column]])
     missing_vals <- setdiff(lov, unique_vals)
@@ -185,9 +192,12 @@ col_hasAllValues <- function(data, column, lov) {
     r
 }
 
-#' validation whether all values from list present in column
+#' Any of values from list present in column
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param lov list of values given as vector
 col_hasAnyValue <- function(data, column, lov) {
     unique_vals <- unique(data[[column]])
     present_vals <- unique_vals %in% lov
@@ -237,9 +247,12 @@ col_hasTypeConsistency <- function(data, column, udf) {
     stop_if_not_implemented("hasTypeConsistency", not_implemented = TRUE)
 }
 
-#' custom validation of the number of distinct non-null values in a column
+#' Has number of distinct non-null values
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param udf function that takes number and returns logical value
 col_hasCountDistinct <- function(data, column, udf) {
     stop_if_miss_columns(data, column)
     vals <- data[[column]]
@@ -248,15 +261,13 @@ col_hasCountDistinct <- function(data, column, udf) {
     r
 }
 
+#' Has minimum value
 #'
+#' @export
 #'
-col_hasApproxCountDistinct <- function(data, column, udf) {
-    stop_if_not_implemented("hasApproxCountDistinct", not_implemented = TRUE)
-}
-
-#' custom validation of a column’s minimum value
-#'
-#'
+#' @param data dataframe to check
+#' @param column column name to check
+#' @param udf user-defined function to apply to minimum value found
 col_hasMin <- function(data, column, udf) {
     min_val <- min(data[[column]], na.rm = T)
     udf(min_val)
@@ -274,17 +285,25 @@ col_hasMax <- function(data, column, udf) {
     udf(max_val)
 }
 
-#' custom validation of a column’s mean value
+#' Has mean value
 #'
+#' @export
 #'
+#' @param data dataframe to check
+#' @param column column name to check
+#' @param udf user-defined function to apply to mean value found
 col_hasMean <- function(data, column, udf) {
     mean_val <- mean(data[[column]], na.rm = T)
     udf(mean_val)
 }
 
-#' custom validation of a column’s standard deviation
+#' Has mean value
 #'
+#' @export
 #'
+#' @param data dataframe to check
+#' @param column column name to check
+#' @param udf user-defined function to apply to standard deviation found
 col_hasStandardDeviation <- function(data, column, udf) {
     stdev <- sd(data[[column]])
     r <- udf(stdev)
@@ -322,7 +341,9 @@ col_hasQuantile <- function(data, column, probability, udf) {
 
 #' custom validation of a column’s entropy
 #'
-#'
+#' @param data dataframe to check
+#' @param column column name to check
+#' @param udf user-defined function to apply to quantile found
 col_hasEntropy <- function(data, column, udf) {
     vals <- data[[column]]
     # dataset size
@@ -330,7 +351,7 @@ col_hasEntropy <- function(data, column, udf) {
     # unique values as vector names and their counts as vector values
     NV <- table(vals)
     func <- function(x) {
-        cv <- length(NV[as.character()])
+        cv <- length(NV[x])
         size <- N
         return(cv/size * log(cv/size))
     }
@@ -359,13 +380,33 @@ col_hasMutualInformation <- function(data, column, ref_column, udf ) {
     r <- udf(mutual_info)
 }
 
-# custom validation of a column pair’s mutual information
+#' Has histogram value
+#'
+#' Function to build histogram object and examine it with user-defined function
+#'
+#' @export
+#'
+#' @param data dataframe to check
+#' @param column column name to check
+#' @param udf user-defined function to apply to histogram value found
 col_hasHistogramValue <- function(data, column, udf) {
-    stop_if_not_implemented("hasHistogramValue", not_implemented = TRUE)
+    stop_if_miss_columns(data, column)
+    vals <- data[[column]]
+    hist_val <- hist(vals)
+    r <- udf(hist_val)
+    r
 }
 
-# custom validation of a column pair’s correlation
+#' Has correlation with reference column
+#'
+#' @export
+#'
+#' @param data dataframe to check
+#' @param column column name
+#' @param ref_column reference column name
+#' @param udf user-defined function to apply to correlation value found
 col_hasCorrelation <- function(data, column, ref_column, udf) {
+    stop_if_miss_columns(data, c(column, ref_column))
     vals <- data[[column]]
     ref_vals <- data[[ref_column]]
     c <- corr(vals, ref_vals)

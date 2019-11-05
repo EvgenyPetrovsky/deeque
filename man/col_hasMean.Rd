@@ -2,10 +2,17 @@
 % Please edit documentation in R/validation-functions-column.R
 \name{col_hasMean}
 \alias{col_hasMean}
-\title{custom validation of a column’s mean value}
+\title{Has mean value}
 \usage{
 col_hasMean(data, column, udf)
 }
+\arguments{
+\item{data}{dataframe to check}
+
+\item{column}{column name to check}
+
+\item{udf}{user-defined function to apply to mean value found}
+}
 \description{
-custom validation of a column’s mean value
+Has mean value
 }

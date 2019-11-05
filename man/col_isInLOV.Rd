@@ -2,7 +2,7 @@
 % Please edit documentation in R/validation-functions-column.R
 \name{col_isInLOV}
 \alias{col_isInLOV}
-\title{Value belongs to list of values}
+\title{Value is contained in a list of predefined values}
 \usage{
 col_isInLOV(data, column, lov)
 }
@@ -14,5 +14,5 @@ col_isInLOV(data, column, lov)
 \item{lov}{list of values given as vector}
 }
 \description{
-Value belongs to list of values
+Value is contained in a list of predefined values
 }

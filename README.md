@@ -10,7 +10,7 @@ The purspoe of this package is to provide easy for use functionality to apply da
 Install package from github using `devtools` package
 
 ```R
-devtools::install_github(repo = "EvgenyPetrovsky/dataque")
+devtools::install_github(repo = "EvgenyPetrovsky/deeque")
 ```
 
 define test data-set

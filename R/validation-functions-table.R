@@ -76,7 +76,7 @@ tab_hasColumnOfType <- function(
 
 #' Function that checks whether combination of columns contains unique value
 #'
-#' @exprt
+#' @export
 #' @param data dataframe
 #' @param columns vector of column names that must contain unique value
 tab_hasUniqueKey <- function(data, columns){

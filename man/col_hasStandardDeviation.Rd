@@ -2,10 +2,17 @@
 % Please edit documentation in R/validation-functions-column.R
 \name{col_hasStandardDeviation}
 \alias{col_hasStandardDeviation}
-\title{custom validation of a column’s standard deviation}
+\title{Has mean value}
 \usage{
 col_hasStandardDeviation(data, column, udf)
 }
+\arguments{
+\item{data}{dataframe to check}
+
+\item{column}{column name to check}
+
+\item{udf}{user-defined function to apply to standard deviation found}
+}
 \description{
-custom validation of a column’s standard deviation
+Has mean value
 }
