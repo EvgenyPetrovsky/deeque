@@ -2,10 +2,12 @@
 % Please edit documentation in R/validation-functions-column.R
 \name{col_isNotGreaterThan}
 \alias{col_isNotGreaterThan}
-\title{validation whether values in the 1s column are not greater than in the 2nd column}
+\title{validation whether values in the 1s column are not greater than in the 2nd
+column}
 \usage{
 col_isNotGreaterThan(data, column, ref_column)
 }
 \description{
-validation whether values in the 1s column are not greater than in the 2nd column
+validation whether values in the 1s column are not greater than in the 2nd
+column
 }

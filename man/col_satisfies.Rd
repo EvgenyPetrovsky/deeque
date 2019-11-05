@@ -2,10 +2,16 @@
 % Please edit documentation in R/validation-functions-column.R
 \name{col_satisfies}
 \alias{col_satisfies}
-\title{validation whether all rows matching 1st predicate also match 2nd predicate}
+\title{Data rows match the predicate}
 \usage{
 col_satisfies(data, predicate)
 }
+\arguments{
+\item{data}{dataframe}
+
+\item{predicate}{check function that takes \code{data} as a parameter and
+returns TRUE if records satisy predicate of FALSE if not}
+}
 \description{
-validation whether all rows matching 1st predicate also match 2nd predicate
+Data rows match the predicate
 }

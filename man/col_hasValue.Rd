@@ -2,10 +2,12 @@
 % Please edit documentation in R/validation-functions-column.R
 \name{col_hasValue}
 \alias{col_hasValue}
-\title{validation whether column has values that satisfy predicate and uder defined function}
+\title{validation whether column has values that satisfy predicate and uder defined
+function}
 \usage{
 col_hasValue(data, column, predicate)
 }
 \description{
-validation whether column has values that satisfy predicate and uder defined function
+validation whether column has values that satisfy predicate and uder defined
+function
 }

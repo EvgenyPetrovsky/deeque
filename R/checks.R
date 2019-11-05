@@ -53,7 +53,7 @@ new_check <- function(description, severity, function_name, ...) {
 #'
 #' @param data dataset to be checked
 #' @param check check to apply - use \code{new_check} function to create a check
-run_check <- function(data, check) {
+apply_check <- function(data, check) {
     fun <- check$function_name
     par <- check$parameters
     par$data = data

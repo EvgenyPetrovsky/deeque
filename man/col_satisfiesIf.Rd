@@ -6,6 +6,16 @@
 \usage{
 col_satisfiesIf(data, predicate_1, predicate_2)
 }
+\arguments{
+\item{data}{dataframe}
+
+\item{predicate_1}{filter function that takes \code{data} as a parameter and
+returns TRUE / FALSE. Records marked with TRUE will be checked by second
+predicate}
+
+\item{predicate_2}{check function that takes \code{data} as a parameter and
+returns TRUE if records satisy predicate of FALSE if not}
+}
 \description{
 validation whether all rows matching 1st predicate also match 2nd predicate
 }

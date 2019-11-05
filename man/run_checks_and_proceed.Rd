@@ -4,7 +4,7 @@
 \alias{run_checks_and_proceed}
 \title{Apply all checks to dataset and if there are no errors}
 \usage{
-run_checks_and_proceed(data, checks, condition = NULL)
+run_checks_and_proceed(data, checks, condition)
 }
 \arguments{
 \item{data}{dataset that needs to be checked}

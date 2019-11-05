@@ -1,6 +1,19 @@
-# apply checks to dataset and return dataframe
-run_checks <- function(data, checks) {
-    result <- Map(f = function(check) {run_check(data, check)}, checks)
+#' Apply checks to dataset and return dataframe
+#' 
+#' Apply group of checks to dataset. Function returns check results. In case when 
+#' \code{stop_condition} is specified function stops execution when 
+#'
+#'
+#' 
+#' @param condition function that takes check_result 
+#'   and returns TRUE / FALSE where FALSE halts execution.
+run_checks <- function(data, checks, condition = NULL) {
+    check_result <- Map(f = function(check) {apply_check(data, check)}, checks)
+    if (!is.null(stop_condition)) {
+        analyze_run(check_result, stop_condition)
+    } else {
+        check_result
+    }
 }
 
 #' Analyze checks results and stop if data quality is insufficient
@@ -11,9 +24,10 @@ run_checks <- function(data, checks) {
 #'
 #' @export
 #'
-#' @param check_result check results that need to be analyzed
+#' @param data dataset that needs to be checked
+#' @param checks group of checks that needs to be applied to dataset
 #' @param condition function that takes check_result and returns TRUE / FALSE
-#'   where TRUE means success and proceeds execution and FALSE halts execution.
+#'   where TRUE means success and proceeds execution and FALSE halts execution
 analyze_run <- function(check_result, condition) {
     if (!is.null(stop_udf) && stop_udf(check_result)) {
         stop(paste("data quality check results are not sufficient to proceed"))
@@ -35,7 +49,7 @@ analyze_run <- function(check_result, condition) {
 #' @param checks group of checks that needs to be applied to dataset
 #' @param condition user defined function that needs to take check results and
 #'   return either TRUE or FALSE
-run_checks_and_proceed <- function(data, checks, condition = NULL) {
+run_checks_and_proceed <- function(data, checks, condition) {
     result <- run_checks(data, checks)
     analyze_check_result(result, condition)
     return(data)

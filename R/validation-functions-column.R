@@ -93,7 +93,7 @@ col_isInLOV <- function(data, column, lov) {
 #' Value belongs to list of values
 #'
 #' Compatibility function that calls isInLOV
-#' 
+#'
 #' @export
 #' @param data dataframe
 #' @param column column name
@@ -109,13 +109,13 @@ col_hasConsistentType <- function(data, column) {
     check_vals <- if (is.factor(vals)) {
         levels(vals)
     } else if (
-        is.numeric.Date(vals) | is.numeric(vals) | 
+        is.numeric.Date(vals) | is.numeric(vals) |
         is.integer(vals) | is.logical(vals)
         ) {
         character()
     } else if (is.character(vals)) {
         character()
-    } 
+    }
 }
 
 #' validation whether all values in a numeric column are non-negative
@@ -154,7 +154,8 @@ col_isGreaterThan <- function(data, column, ref_column) {
     r
 }
 
-#' validation whether values in the 1s column are not greater than in the 2nd column
+#' validation whether values in the 1s column are not greater than in the 2nd
+#' column
 #'
 #'
 col_isNotGreaterThan <- function(data, column, ref_column) {
@@ -163,7 +164,8 @@ col_isNotGreaterThan <- function(data, column, ref_column) {
     r
 }
 
-#' validation whether column has values that satisfy predicate and uder defined function
+#' validation whether column has values that satisfy predicate and uder defined
+#' function
 #'
 #'
 col_hasValue <- function(data, column, predicate) {
@@ -193,9 +195,12 @@ col_hasAnyValue <- function(data, column, lov) {
     r
 }
 
-#' validation whether all rows matching 1st predicate also match 2nd predicate
+#' Data rows match the predicate
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param predicate check function that takes \code{data} as a parameter and
+#'   returns TRUE if records satisy predicate of FALSE if not
 col_satisfies <- function(data, predicate) {
     r <- predicate(data)
     r
@@ -203,7 +208,13 @@ col_satisfies <- function(data, predicate) {
 
 #' validation whether all rows matching 1st predicate also match 2nd predicate
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param predicate_1 filter function that takes \code{data} as a parameter and
+#'   returns TRUE / FALSE. Records marked with TRUE will be checked by second
+#'   predicate
+#' @param predicate_2 check function that takes \code{data} as a parameter and
+#'   returns TRUE if records satisy predicate of FALSE if not
 col_satisfiesIf <- function(data, predicate_1, predicate_2) {
     r1 <- predicate_1(data)
     r2 <- predicate_2(data)
@@ -280,11 +291,33 @@ col_hasStandardDeviation <- function(data, column, udf) {
     r
 }
 
-#' custom validation of a particular quantile of a column (approx.)
+#' custom validation of a particular quantile of a column
 #'
+#' Function is applicable only to numeric columns. It calculates value of
+#' quantile of column values for a given probability. user defined function does
+#' validation of quantile. Quantile is a value that corresponds to probability
+#' of taking random value from sample that is less than quantile value
 #'
-col_hasApproxQuantile <- function(data, column, quantile, udf ) {
+#' @export
+#'
+#' @param data dataframe to check
+#' @param column column name to check
+#' @param probability probability for calculation of quantile
+#' @param udf user-defined function to apply to quantile found
+col_hasQuantile <- function(data, column, probability, udf) {
+    stop_if_miss_columns(data, column)
     stop_if_not_implemented("hasApproxQuantil", not_implemented = TRUE)
+    if (!tab_hasColumnOfType(data, column, col_type$numeric)) {
+        warning(paste("column", column, "has type incompatible with numeric"))
+        return(FALSE)
+    }
+    vals <- data[[column]]
+    if (probability < 0 | probability > 1) {
+        stop(paste("probability has value", probability, "but it must be in range 0..1"))
+    }
+    qv <- quantile(vals, probability)
+    r <- udf(qv)
+    r
 }
 
 #' custom validation of a column’s entropy

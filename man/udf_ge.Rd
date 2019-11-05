@@ -10,6 +10,6 @@ udf_ge(x)
 \item{x}{- value to compare with.}
 }
 \description{
-Function returns another function that checks if given value is greater than 
+Function returns another function that checks if given value is greater than
 or equal \code{x}
 }

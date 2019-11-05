@@ -10,6 +10,6 @@ udf_lt(x)
 \item{x}{- value to compare with.}
 }
 \description{
-Function returns another function that checks if given value is less than 
+Function returns another function that checks if given value is less than
 \code{x}
 }
