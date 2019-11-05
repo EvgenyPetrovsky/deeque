@@ -4,7 +4,7 @@
 
 # Metadata checks
 
-#' Function that calculates number of rows in dataframe and applies UDF (user 
+#' Function that calculates number of rows in dataframe and applies UDF (user
 #' defined function) to it
 #'
 #' @export
@@ -16,7 +16,7 @@ hasRowCount <- function(data, udf) {
   r
 }
 
-#' Function that calculates number of columns in dataframe and applies UDF (user 
+#' Function that calculates number of columns in dataframe and applies UDF (user
 #' defined function) to it
 #'
 #' @export
@@ -28,23 +28,34 @@ hasColumnCount <- function(data, udf) {
   r
 }
 
+#' Function that checks whether column presents in the dataframe
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
 hasColumn <- function(data, column) {
   r <- column[1] %in% colnames(data)
   r
 }
 
+#' Function that checks whether columns presents in the dataframe
 #'
+#' Function returns TRUE if all columns present in the dataframe
 #'
+#' @export
+#' @param data dataframe
+#' @param columns vector of column names
 hasColumns <- function(data, columns) {
-  result = (columns %in% colnames(data))
-  r <- min(result)
+  r <- all(columns %in% colnames(data))
   r
 }
 
+#' Function that checks whether dataframe column is of specific type
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param type text name of the type - see \link{col_type}
 hasColumnOfType <- function(
   data, column,
   type = c("Date", "numeric", "integer", "logical", "character", "factor")
@@ -63,34 +74,39 @@ hasColumnOfType <- function(
   r
 }
 
+#' Function that checks whether combination of columns contains unique value
 #'
-#'
+#' @exprt
+#' @param data dataframe
+#' @param columns vector of column names that must contain unique value
 hasUniqueKey <- function(data, columns){
-  col_diff <- setdiff(columns, colnames(data))
-  col_text <- paste(paste("'", col_diff, "'", sep = ""), collapse = ", ")
-  if (length() > 0) {
-    stop(paste("columns", col_text, "are not present in data frame"))
-  }
-  n0 <- nrow(data)
-  n1 <- nrow(subset(data, select = columns))
-  r <- if (n0 == n1) {TRUE} else {FALSE}
+  stop_if_miss_columns(data, columns)
+  check_data <- subset(data, select = columns)
+  n0 <- nrow(check_data)
+  n1 <- nrow(unique(check_data))
+  r <- n0 == n1
   r
 }
 
 #------------------------------------------------------------------------------#
 # Value checks
 
-#' check that there are no missing values in a column
+#' No missing values in a column
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
 isComplete <- function(data, column) {
   stop_if_miss_columns(data, column)
   !is.na(data[[column]])
 }
 
-#' custom validation of the fraction of missing values in a column
+#' Assess ratio of missing value with user-defined function
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param udf user-defined function that takes ratio and returns logical value
 hasCompleteness <- function(data, column, udf) {
     stop_if_miss_columns(data, column)
     stat <- mean(!is.na(data[[column]]))
@@ -98,9 +114,11 @@ hasCompleteness <- function(data, column, udf) {
     r
 }
 
-#' check that there are no duplicates in a column
+#' No duplicates in a column
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
 isUnique <- function(data, column) {
     stop_if_miss_columns()
     # index of 1st duplicated element (0 - no duplicates)
@@ -109,9 +127,15 @@ isUnique <- function(data, column) {
     r
 }
 
-#' custom validation of the unique value ratio in a column
+#' Assess uniqueness of column values with user-defined function
 #'
+#' Uniqueness is defined by formula |{v ∈ V | cv = 1}| / |V| where V is total set of values that column takes, v - exact value, cv - values count in column
+#' In other words - number of values that occur only 1 time divided by total number of possible values. For example uniqueness of [1, 2, 2, 3] is 2/3
 #'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param udf user-defined function that takes ratio and returns logical value
 hasUniqueness <- function(data, column, udf) {
     # Uniqueness: |{v ∈ V | cv = 1}| / |V|
     vals <- data[[column]]
@@ -125,8 +149,14 @@ hasUniqueness <- function(data, column, udf) {
 }
 
 
+#' Assess distinctness of column values with user-defined function
 #'
+#' Distinctness is defined by formula |V| / N where V is is total set of values that column takes, N is number of values in column.
 #'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param udf user-defined function that takes ratio and returns logical value
 hasDistinctness <- function(data, column, udf) {
     # Distinctness: |V| / N
     vals <- data[[column]]
@@ -136,23 +166,43 @@ hasDistinctness <- function(data, column, udf) {
     r
 }
 
-#' validation of the fraction of values that are in a valid range
-#'
-#'
+#' Value belongs to list of values
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param lov list of values given as vector
 isInLOV <- function(data, column, lov) {
     stop_if_miss_columns(data, column)
     r <- data[[column]] %in% lov
     r
-}'
+}
+
+#' Value belongs to list of values
 #'
-#'
+#' Compatibility function that calls isInLOV
+#' 
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param lov list of values given as vector
 isInRange <- function(data, column, range) {isInLOV(data, column, range)}
 
-#' validation of the largest fraction of values that have the same type
+#' The largest fraction of values has the same type
 #'
 #'
 hasConsistentType <- function(data, column) {
     stop_if_not_implemented("hasConsistentType", not_implemented = TRUE)
+    vals <- data[[column]]
+    check_vals <- if (is.factor(vals)) {
+        levels(vals)
+    } else if (
+        is.numeric.Date(vals) | is.numeric(vals) | 
+        is.integer(vals) | is.logical(vals)
+        ) {
+        character()
+    } else if (is.character(vals)) {
+        character()
+    } 
 }
 
 #' validation whether all values in a numeric column are non-negative
@@ -283,7 +333,8 @@ hasCountDistinct <- function(data, column, udf) {
     V <- unique(vals[!is.na(vals)])
     r <- udf(V)
     r
-}'
+}
+
 #'
 #'
 hasApproxCountDistinct <- function(data, column, udf) {
@@ -300,7 +351,11 @@ hasMin <- function(data, column, udf) {
 
 #' custom validation of a column’s maximum value
 #'
+#' @export
 #'
+#' @param data dataframe to check
+#' @param column column name to check
+#' @param udf user-defined function to apply to maximum value found
 hasMax <- function(data, column, udf) {
     max_val <- max(data[[column]], na.rm = T)
     udf(max_val)
@@ -349,7 +404,7 @@ hasEntropy <- function(data, column, udf) {
     r
 }
 
-# 
+#
 hasMutualInformation <- function(data, column, ref_column, udf ) {
     vals1 <- data[[column]]
     vals2 <- data[[ref_column]]

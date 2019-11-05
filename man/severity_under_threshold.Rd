@@ -2,7 +2,7 @@
 % Please edit documentation in R/checks.R
 \name{severity_under_threshold}
 \alias{severity_under_threshold}
-\title{Function that creates severity check function.}
+\title{Create severity check function.}
 \usage{
 severity_under_threshold(severity)
 }
@@ -10,5 +10,6 @@ severity_under_threshold(severity)
 \item{severity}{- severity text label (INFO, WARNING, ERROR)}
 }
 \description{
-Function that creates severity check function.
+Function will check and return TRUE when severity is under threshold for
+checks with \code{check_sucess} status = \code{FALSE}
 }

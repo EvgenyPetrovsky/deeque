@@ -10,5 +10,6 @@ severity_above_threshold(severity)
 \item{severity}{- severity text label (INFO, WARNING, ERROR)}
 }
 \description{
-Function that creates severity check function.
+Function will check and return TRUE when severity is above threshold for
+checks with \code{check_sucess} status = \code{FALSE}
 }

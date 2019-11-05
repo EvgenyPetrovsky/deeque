@@ -69,15 +69,32 @@ run_check <- function(data, check) {
     )
 }
 
+#' Translate severity label into rank
+#'
+#' Function takes vector of severity labels and translates them into number
+#' according to their position within \code{severity} list. Severities in list
+#' start from lowest to highest. So first mentioned severity has rank = 1 and
+#' every next severity has rank incremented by one
+#'
+#' @export
+#'
+#' @param severity severity value (or vector of values) from \code{severity}
+#'   list
 severity_rank <- function(severity) {
+    init <- if (length(severity) == 0) {
+        return(numeric())
+    }
     # get severities from data
     labels  <- names(deeque::severity)
     # get severity ranks
     ranks   <- 1:length(labels)
+    # initialize vector of ranks (initially 0 values)
+    init <- replicate(n = length(severity), expr = 0)
     # sum replace severity names with ranks
+    # if severity name matches to label then add its rank to 0-val vector
     Reduce(
         f = function(z, x) {z + x * (severity == labels[x])},
-        x = ranks, init = rep(0, length(ranks))
+        x = ranks, init = init
     )
 }
 
@@ -100,7 +117,10 @@ severity_at_threshold <- function(severity) {
     }
 }
 
-#' Function that creates severity check function.
+#' Create severity check function.
+#'
+#' Function will check and return TRUE when severity is under threshold for
+#' checks with \code{check_sucess} status = \code{FALSE}
 #'
 #' @export
 #'
@@ -116,6 +136,9 @@ severity_under_threshold <- function(severity) {
 }
 
 #' Function that creates severity check function.
+#'
+#' Function will check and return TRUE when severity is above threshold for
+#' checks with \code{check_sucess} status = \code{FALSE}
 #'
 #' @export
 #'

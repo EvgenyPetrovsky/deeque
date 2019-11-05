@@ -37,6 +37,6 @@ analyze_run <- function(check_result, condition) {
 #'   return either TRUE or FALSE
 run_checks_and_proceed <- function(data, checks, condition = NULL) {
     result <- run_checks(data, checks)
-    analyze_check_result(result, stop_udf)
+    analyze_check_result(result, condition)
     return(data)
 }
