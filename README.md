@@ -20,24 +20,42 @@ library(magrittr)
 library(deeque)
 
 # define dataset
-test_df <- data.frame(...)
+test_df <- as.data.frame(datasets::Titanic, stringsAsFactors = T)
 
 # define checks
-checks <- new_group() %>%
-  add_check(new_check("ERROR", function_name = "frame_hasColumn", column_name = "Price")) %>%
-  add_check(new_check("INFO", function_name = "hasMin", column_name = "Price", udf = function(x) {x > 0})) %>%
-  ...
+checks <-
+  new_group() %>%
+  add_check(new_check(
+    description = "Dataset must have column 'Class'",
+    severity = "ERROR", function_name = "tab_hasColumn", column = "Class"
+  )) %>%
+  add_check(new_check(
+    "Minimum value of 'Freq' must be positive number",
+    "INFO", col_hasMin, column = "Freq", udf = function(x) {x >= 0}
+  )) %>%
+  add_check(new_check(
+    "Column 'Sex' must value have values from list [Male, Female]",
+    "WARNING", col_isInLOV, column = "Sex", lov = factor(c("Male", "Female"))
+  )) %>%
+  add_check(new_check(
+    "Combination of values in columns 'Class', 'Sex', 'Age', 'Survived' must be unique",
+    "WARNING", tab_hasUniqueKey, columns = c("Class", "Sex", "Age", "Survived")
+  ))
+
+# show checks
+checks %>% convert_checks_to_df()
 
 # verify dataset using checks defined
-test_df %>% verify(checks)
+chk_res <- test_df %>% run_checks(checks) 
+View(chk_res %>% convert_run_results_to_df())
 
-# another option verify; stop execution if stop condition is achieved
-test_df %>%
-  run_checks_and_proceed(
+# another option verify; stop execution if condition is not satisfied
+test_df %T>%
+  run_checks(
     checks,
-    condition = severity_under_threshold(severity$WARNING)) %>%
-  do_something_meaningful() %>%
-  write.table(...)
+    condition = severity_under_threshold(severity$WARNING)
+  ) %>%
+  head(5)
 ```
 
 ## structure

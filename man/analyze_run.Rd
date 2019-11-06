@@ -7,12 +7,10 @@
 analyze_run(check_result, condition)
 }
 \arguments{
+\item{check_result}{list of check application outcomes (\code{apply_check})}
+
 \item{condition}{function that takes check_result and returns TRUE / FALSE
 where TRUE means success and proceeds execution and FALSE halts execution}
-
-\item{data}{dataset that needs to be checked}
-
-\item{checks}{group of checks that needs to be applied to dataset}
 }
 \description{
 Data quality reported in check resutls must be sufficient otherwise function

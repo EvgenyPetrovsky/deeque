@@ -7,10 +7,14 @@
 run_checks(data, checks, condition = NULL)
 }
 \arguments{
-\item{condition}{function that takes check_result 
+\item{data}{dataframe to check}
+
+\item{checks}{group of checks created by new_group() %>% add_check() ...}
+
+\item{condition}{function that takes check_result
 and returns TRUE / FALSE where FALSE halts execution.}
 }
 \description{
-Apply group of checks to dataset. Function returns check results. In case when 
+Apply group of checks to dataset. Function returns check results. In case when
 \code{stop_condition} is specified function stops execution when
 }
