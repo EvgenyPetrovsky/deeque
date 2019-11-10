@@ -13,6 +13,3 @@ udf_gt(x)
 Function returns another function that checks if given value is greater than
 to \code{x}
 }
-\examples{
-hasMean(data = data.frame(col1 = [0:10]), udf = udf_gt(0))
-}

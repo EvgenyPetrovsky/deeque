@@ -106,8 +106,15 @@ col_isContainedIn <- function(data, column, alloved_values) {
 
 #' The largest fraction of values has the same type
 #'
+#' Function returns TRUE automativally for all types except character and
+#' factor. Latter factors are checked for consistency.
 #'
-col_hasConsistentType <- function(data, column) {
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param udf user-defined function that takes largest fraction value and
+#'   returns logical value
+col_hasConsistentType <- function(data, column, udf) {
     stop_if_not_implemented("hasConsistentType", not_implemented = TRUE)
     vals <- data[[column]]
     check_vals <- if (is.factor(vals)) {

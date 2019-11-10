@@ -9,8 +9,6 @@ run_checks(data, checks, condition = NULL)
 \arguments{
 \item{data}{dataframe to check}
 
-\item{checks}{group of checks created by new_group() %>% add_check() ...}
-
 \item{condition}{function that takes check_result
 and returns TRUE / FALSE where FALSE halts execution.}
 }

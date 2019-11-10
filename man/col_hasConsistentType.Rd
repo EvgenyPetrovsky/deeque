@@ -4,8 +4,17 @@
 \alias{col_hasConsistentType}
 \title{The largest fraction of values has the same type}
 \usage{
-col_hasConsistentType(data, column)
+col_hasConsistentType(data, column, udf)
+}
+\arguments{
+\item{data}{dataframe}
+
+\item{column}{column name}
+
+\item{udf}{user-defined function that takes largest fraction value and
+returns logical value}
 }
 \description{
-The largest fraction of values has the same type
+Function returns TRUE automativally for all types except character and
+factor. Latter factors are checked for consistency.
 }
