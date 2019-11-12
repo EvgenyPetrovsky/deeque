@@ -68,7 +68,7 @@ This data quality framework defines following building blocks:
 * `functions` validation functions library - functions that analyze data for data-quality issues;
 * `checks` set of operations to manage checks; checks are validation functions applied to specific context (with specified column names, severity, user-defined functions that support decision taking about check result;
 * `adapters` set of operations for serialization / deserialization of check results and checks themselves;
-* `verification` set of operations to execute data quality verification and help to take a decision in control flow (like stop if ERROR-severity issues are found).
+* `verification` set of operations to execute data quality verification and help to take a decision in control flow (like stop if ERROR severity issues are found).
 
 ## standard user flow
 
