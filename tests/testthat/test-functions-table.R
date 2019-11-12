@@ -81,9 +81,24 @@ test_that("tab_hasColumns check returns FALSE when any of columns does not exist
 })
 
 # tab_hasUniqueKey
-test_that("tab_hasUniqueKey stops when dataframe has no columns", {
+test_that("tab_hasUniqueKey stops when dataframe has 0 columns", {
   tab <- data.frame()
   uk1 <- "uk_col_1"
   err_message <- paste0(uk1, ".*", "missing")
-  expect_error(tab_hasUniqueKey(tab, uk1), )
+  expect_error(tab_hasUniqueKey(tab, uk1), err_message)
+})
+
+test_that("tab_hasUniqueKey stops when dataframe has 0 rows", {
+  tab <- data.frame(a = numeric(), b = numeric(), c = numeric())
+  uk1 <- colnames(tab)
+  err_message <- "0 rows"
+  expect_error(tab_hasUniqueKey(tab, uk1), err_message)
+})
+
+test_that("tab_hasUniqueKey stops when dataframe has no specified columns", {
+  tab <- data.frame(a = 1, b = 1, c = 1)
+  err_message <- paste0("Column", ".*", "missing")
+  expect_error(tab_hasUniqueKey(tab, "A"), err_message)
+  expect_error(tab_hasUniqueKey(tab, c("A", "A")), err_message)
+  expect_error(tab_hasUniqueKey(tab, c("a", "A")), err_message)
 })

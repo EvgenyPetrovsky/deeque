@@ -81,6 +81,9 @@ tab_hasColumnOfType <- function(
 #' @param columns vector of column names that must contain unique value
 tab_hasUniqueKey <- function(data, columns){
   stop_if_miss_columns(data, columns)
+  if (nrow(data) == 0) {
+    stop("Data frame has 0 rows, uniqueness can't be checked")
+  }
   check_data <- subset(data, select = columns)
   n0 <- nrow(check_data)
   n1 <- nrow(unique(check_data))
