@@ -131,7 +131,9 @@ col_hasConsistentType <- function(data, column, udf) {
 
 #' validation whether all values in a numeric column are non-negative
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
 col_isNonNegative <- function(data, column) {
     stop_if_miss_columns(data, column)
     r <- data[[column]] >= 0
@@ -140,8 +142,11 @@ col_isNonNegative <- function(data, column) {
 
 #' validation whether values in the 1s column are less than in the 2nd column
 #'
-#'
-col_isLessThan <- function(data, column, ref_column, value) {
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param ref_column reference column name
+col_isLessThan <- function(data, column, ref_column) {
     stop_if_miss_columns(data, c(column, ref_column))
     r <- data[[column]] < data[[ref_column]]
     r
@@ -149,7 +154,10 @@ col_isLessThan <- function(data, column, ref_column, value) {
 
 #' validation whether values in the 1s column are not less than in the 2nd column
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param ref_column reference column name
 col_isNotLessThan <- function(data, column, ref_column) {
     stop_if_miss_columns(data, c(column, ref_column))
     r <- data[[column]] >= data[[ref_column]]
@@ -158,7 +166,10 @@ col_isNotLessThan <- function(data, column, ref_column) {
 
 #' validation whether values in the 1s column are greater than in the 2nd column
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param ref_column reference column name
 col_isGreaterThan <- function(data, column, ref_column) {
     stop_if_miss_columns(data, c(column, ref_column))
     r <- data[[column]] > data[[ref_column]]
@@ -168,7 +179,10 @@ col_isGreaterThan <- function(data, column, ref_column) {
 #' validation whether values in the 1s column are not greater than in the 2nd
 #' column
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param ref_column reference column name
 col_isNotGreaterThan <- function(data, column, ref_column) {
     stop_if_miss_columns(data, c(column, ref_column))
     r <- data[[column]] <= data[[ref_column]]
@@ -178,7 +192,10 @@ col_isNotGreaterThan <- function(data, column, ref_column) {
 #' validation whether column has values that satisfy predicate and uder defined
 #' function
 #'
-#'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param predicate function that takes column value and returns TRUE or FALSE
 col_hasValue <- function(data, column, predicate) {
     stop_if_miss_columns(data, column)
     r <- predicate(data[[column]])
@@ -242,14 +259,19 @@ col_satisfiesIf <- function(data, predicate_1, predicate_2) {
 
 #' user-defined validation of the predictability of a column
 #'
-#'
+#' @param data dataframe
+#' @param column column name (response)
+#' @param ref_columns columns used as predictors
+#' @param udf function that takes number and returns logical value
 col_hasPredictability <- function(data, column, ref_columns, udf) {
     stop_if_not_implemented("hasPredictability", not_implemented = TRUE)
 }
 
 #' custom validation of the maximum fraction of values of the same data type
 #'
-#'
+#' @param data dataframe
+#' @param column column name
+#' @param udf function that takes number and returns logical value
 col_hasTypeConsistency <- function(data, column, udf) {
     stop_if_not_implemented("hasTypeConsistency", not_implemented = TRUE)
 }

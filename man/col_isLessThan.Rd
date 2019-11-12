@@ -4,7 +4,14 @@
 \alias{col_isLessThan}
 \title{validation whether values in the 1s column are less than in the 2nd column}
 \usage{
-col_isLessThan(data, column, ref_column, value)
+col_isLessThan(data, column, ref_column)
+}
+\arguments{
+\item{data}{dataframe}
+
+\item{column}{column name}
+
+\item{ref_column}{reference column name}
 }
 \description{
 validation whether values in the 1s column are less than in the 2nd column

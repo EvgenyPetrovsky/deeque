@@ -17,6 +17,9 @@ concise criteria c) specify when it is applicable (if not always)}
 to package}
 
 \item{function_name}{validation function name - text or function (without parameters)}
+
+\item{...}{other parameters that will be passed to validation function like 
+\code{column_name}, \code{udf}, etc.}
 }
 \description{
 Function takes parameters and returns data structure that represents check

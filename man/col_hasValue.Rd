@@ -7,6 +7,13 @@ function}
 \usage{
 col_hasValue(data, column, predicate)
 }
+\arguments{
+\item{data}{dataframe}
+
+\item{column}{column name}
+
+\item{predicate}{function that takes column value and returns TRUE or FALSE}
+}
 \description{
 validation whether column has values that satisfy predicate and uder defined
 function

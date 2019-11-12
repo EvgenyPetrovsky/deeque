@@ -6,6 +6,15 @@
 \usage{
 col_hasPredictability(data, column, ref_columns, udf)
 }
+\arguments{
+\item{data}{dataframe}
+
+\item{column}{column name (response)}
+
+\item{ref_columns}{columns used as predictors}
+
+\item{udf}{function that takes number and returns logical value}
+}
 \description{
 user-defined validation of the predictability of a column
 }

@@ -6,6 +6,13 @@
 \usage{
 col_hasTypeConsistency(data, column, udf)
 }
+\arguments{
+\item{data}{dataframe}
+
+\item{column}{column name}
+
+\item{udf}{function that takes number and returns logical value}
+}
 \description{
 custom validation of the maximum fraction of values of the same data type
 }

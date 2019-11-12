@@ -36,7 +36,7 @@ stop_if_not_implemented <- function(name, not_implemented) {
 
 #' Ratio of success based on vector of logical values
 #' 
-#' @param - vector of logical values 
+#' @param logical_vector vector of logical values 
 ratio <- function(logical_vector) {
     if (!is.logical(logical_vector)) {
         stop("Values must be logical (TRUE or FALSE)")

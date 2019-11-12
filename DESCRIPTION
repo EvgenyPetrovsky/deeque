@@ -7,7 +7,7 @@ Maintainer: Evgeny Petrovskiy <EvgenyPetrovsky@GitHub.com>
 Description: This package can be used to check any tabular data
     Package was inspired by Spark implementation and related paper.
     See details on github: awslabs/deequ
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1

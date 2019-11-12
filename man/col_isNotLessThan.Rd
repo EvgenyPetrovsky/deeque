@@ -6,6 +6,13 @@
 \usage{
 col_isNotLessThan(data, column, ref_column)
 }
+\arguments{
+\item{data}{dataframe}
+
+\item{column}{column name}
+
+\item{ref_column}{reference column name}
+}
 \description{
 validation whether values in the 1s column are not less than in the 2nd column
 }

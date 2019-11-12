@@ -7,7 +7,7 @@
 ratio(logical_vector)
 }
 \arguments{
-\item{-}{vector of logical values}
+\item{logical_vector}{vector of logical values}
 }
 \description{
 Ratio of success based on vector of logical values

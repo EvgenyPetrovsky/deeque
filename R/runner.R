@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @param data dataframe to check
-#' @param checks group of checks created by \code{new_group() %>% add_check() ...}
+#' @param checks group of checks
 #' @param condition function that takes check_result
 #'   and returns TRUE / FALSE where FALSE halts execution.
 run_checks <- function(data, checks, condition = NULL) {

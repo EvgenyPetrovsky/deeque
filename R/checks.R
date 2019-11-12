@@ -31,7 +31,8 @@ add_check <- function(group, new_check) {
 #' @param severity check severity, can be chosen from `severity` list attached
 #' to package
 #' @param function_name validation function name - text or function (without parameters)
-#'
+#' @param ... other parameters that will be passed to validation function like 
+#'   \code{column_name}, \code{udf}, etc.
 new_check <- function(description, severity, function_name, ...) {
     if (typeof(function_name) == "closure") {
         function_name = as.character(substitute(function_name))

@@ -6,6 +6,11 @@
 \usage{
 col_isNonNegative(data, column)
 }
+\arguments{
+\item{data}{dataframe}
+
+\item{column}{column name}
+}
 \description{
 validation whether all values in a numeric column are non-negative
 }
