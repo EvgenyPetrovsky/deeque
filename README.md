@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/EvgenyPetrovsky/deeque.svg?branch=master)](https://travis-ci.org/EvgenyPetrovsky/deeque)
+[![codecov](https://codecov.io/gh/EvgenyPetrovsky/deeque/branch/master/graphs/badge.svg)](https://codecov.io/gh/EvgenyPetrovsky/deeque)
+
 # dataque
 
 Data Quality control framework for dataframes in R
