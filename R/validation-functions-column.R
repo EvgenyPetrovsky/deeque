@@ -42,7 +42,7 @@ col_isUnique <- function(data, column) {
 
 #' Assess uniqueness of column values with user-defined function
 #'
-#' Uniqueness is defined by formula |{v ∈ V | cv = 1}| / |V| where V is total set of values that column takes, v - exact value, cv - values count in column
+#' Uniqueness is defined by formula |{v belongs to V | cv = 1}| / |V| where V is total set of values that column takes, v - exact value, cv - values count in column
 #' In other words - number of values that occur only 1 time divided by total number of possible values. For example uniqueness of [1, 2, 2, 3] is 2/3
 #'
 #' @export
@@ -50,7 +50,7 @@ col_isUnique <- function(data, column) {
 #' @param column column name
 #' @param udf user-defined function that takes ratio and returns logical value
 col_hasUniqueness <- function(data, column, udf) {
-    # Uniqueness: |{v ∈ V | cv = 1}| / |V|
+    # Uniqueness: |{v belongs to V | cv = 1}| / |V|
     vals <- data[[column]]
     dup_ids <- duplicated(vals)
     V <- unique(vals)
