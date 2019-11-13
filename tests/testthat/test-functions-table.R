@@ -102,3 +102,29 @@ test_that("tab_hasUniqueKey stops when dataframe has no specified columns", {
   expect_error(tab_hasUniqueKey(tab, c("A", "A")), err_message)
   expect_error(tab_hasUniqueKey(tab, c("a", "A")), err_message)
 })
+
+test_that("tab_hasUniqueKey returns TRUE when dataframe column has unique values", {
+  tab <- data.frame(a = c(1:26), b = LETTERS, c = letters)
+  expect_equal(tab_hasUniqueKey(tab, c("a")), TRUE)
+  expect_equal(tab_hasUniqueKey(tab, c("b")), TRUE)
+  expect_equal(tab_hasUniqueKey(tab, c("c")), TRUE)
+})
+
+test_that("tab_hasUniqueKey returns FALSE when dataframe column has non-unique values", {
+  tab <- data.frame(a = c(1,1:10), b = FALSE, c = TRUE)
+  expect_equal(tab_hasUniqueKey(tab, c("a")), FALSE)
+  expect_equal(tab_hasUniqueKey(tab, c("b")), FALSE)
+  expect_equal(tab_hasUniqueKey(tab, c("c")), FALSE)
+})
+
+test_that("tab_hasUniqueKey returns TRUE when combination of non-unqiue column becomes unique", {
+  tab <- data.frame(
+    a = c(0, 1, 0, 1), 
+    b = c(0, 0, 1, 1), 
+    c = c(0, 0, 0, 0))
+  expect_equal(tab_hasUniqueKey(tab, c("a")), FALSE)
+  expect_equal(tab_hasUniqueKey(tab, c("b")), FALSE)
+  expect_equal(tab_hasUniqueKey(tab, c("a", "b")), TRUE)
+  expect_equal(tab_hasUniqueKey(tab, c("a", "b", "c")), TRUE)
+  expect_equal(tab_hasUniqueKey(tab, c("a", "c")), FALSE)
+})
