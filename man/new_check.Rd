@@ -18,7 +18,7 @@ to package}
 
 \item{function_name}{validation function name - text or function (without parameters)}
 
-\item{...}{other parameters that will be passed to validation function like 
+\item{...}{other parameters that will be passed to validation function like
 \code{column}, \code{udf}, etc.}
 }
 \description{

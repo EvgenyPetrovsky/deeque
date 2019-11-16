@@ -22,8 +22,8 @@ test_that("New group of checks is an empty list of length 0", {
 
 test_that("Function new check returns list object", {
   c <- new_check(
-    description = "New check for testing", 
-    severity = severity[[1]], 
+    description = "New check for testing",
+    severity = severity[[1]],
     function_name = identity
     )
   expect_equal(is.list(c), TRUE)
@@ -41,16 +41,28 @@ test_that("Function new check returns list object", {
 
 #test_that("only check can be included into group")
 
-test_that("add checks for columns returns list of length equal to number of column names", {
-  group   <- new_group
+test_that("new checks for columns returns list of length equal to number of column names", {
   columns <- c("A", "B", "C")
   checks  <- new_checks_for_columns(
     columns = columns,
-    description = "New check for testing", 
-    severity = severity[[1]], 
+    description = "New check for testing",
+    severity = severity[[1]],
     function_name = identity
     )
   expect_equal(length(checks), 3)
-  expect_equal(length(add_check(group, checks)), 3)
+})
 
+test_that("add list of n checks into group of x returns group of length x + n", {
+  g0 <- new_group()
+  columns <- c("A", "B", "C")
+  checks  <- new_checks_for_columns(
+    columns = columns,
+    description = "New check for testing",
+    severity = severity[[1]],
+    function_name = identity
+  )
+  g3 <- add_checks(g0, checks)
+  g6 <- add_checks(g3, checks)
+  expect_equal(length(g3), 0 + 3)
+  expect_equal(length(g6), 0 + 3 + 3)
 })

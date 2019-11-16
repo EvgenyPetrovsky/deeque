@@ -14,11 +14,13 @@ new_checks_for_columns(columns, description, severity, function_name, ...)
 \item{severity}{check severity, can be chosen from `severity` list attached
 to package}
 
-\item{function_name}{validation function name - text or function (without parameters)}
+\item{function_name}{validation function name - text or function (without
+parameters)}
 
-\item{...}{other parameters that will be passed to validation function like 
+\item{...}{other parameters that will be passed to validation function like
 \code{udf}, etc.}
 }
 \description{
-Similar to \link{new_check} but allows to specify check to many columns in 1 go
+Similar to \link{new_check} but allows to specify check to many columns in 1
+go
 }

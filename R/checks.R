@@ -16,6 +16,16 @@ add_check <- function(group, new_check) {
 
 }
 
+#' Add list of checks into group
+#'
+#' @export
+#'
+#' @param group group of checks where new check needs to be added
+#' @param new_checks new check defined by \code{new_check} function
+add_checks <- function(group, new_checks) {
+    c(group, new_checks)
+}
+
 #' Create new check
 #'
 #' Function takes parameters and returns data structure that represents check
@@ -31,7 +41,7 @@ add_check <- function(group, new_check) {
 #' @param severity check severity, can be chosen from `severity` list attached
 #' to package
 #' @param function_name validation function name - text or function (without parameters)
-#' @param ... other parameters that will be passed to validation function like 
+#' @param ... other parameters that will be passed to validation function like
 #'   \code{column}, \code{udf}, etc.
 new_check <- function(description, severity, function_name, ...) {
     if (typeof(function_name) == "closure") {
@@ -46,22 +56,24 @@ new_check <- function(description, severity, function_name, ...) {
 }
 
 #' Add same check for different columns
-#' 
-#' Similar to \link{new_check} but allows to specify check to many columns in 1 go
-#' 
+#'
+#' Similar to \link{new_check} but allows to specify check to many columns in 1
+#' go
+#'
 #' @export
 #' @param columns vector of columns
 #' @param description check description
 #' @param severity check severity, can be chosen from `severity` list attached
-#' to package
-#' @param function_name validation function name - text or function (without parameters)
-#' @param ... other parameters that will be passed to validation function like 
+#'   to package
+#' @param function_name validation function name - text or function (without
+#'   parameters)
+#' @param ... other parameters that will be passed to validation function like
 #'   \code{udf}, etc.
 new_checks_for_columns <- function(columns, description, severity, function_name, ...) {
     new_one <- function(column) {
         new_check(description, severity, function_name, column = column, ...)
     }
-    Map(columns, f = new_one) 
+    Map(columns, f = new_one)
 }
 
 #' Execute check one check on data
