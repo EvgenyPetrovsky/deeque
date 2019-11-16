@@ -32,7 +32,7 @@ add_check <- function(group, new_check) {
 #' to package
 #' @param function_name validation function name - text or function (without parameters)
 #' @param ... other parameters that will be passed to validation function like 
-#'   \code{column_name}, \code{udf}, etc.
+#'   \code{column}, \code{udf}, etc.
 new_check <- function(description, severity, function_name, ...) {
     if (typeof(function_name) == "closure") {
         function_name = as.character(substitute(function_name))
@@ -43,6 +43,25 @@ new_check <- function(description, severity, function_name, ...) {
         function_name = function_name,
         parameters = list(...)
     )
+}
+
+#' Add same check for different columns
+#' 
+#' Similar to \link{new_check} but allows to specify check to many columns in 1 go
+#' 
+#' @export
+#' @param columns vector of columns
+#' @param description check description
+#' @param severity check severity, can be chosen from `severity` list attached
+#' to package
+#' @param function_name validation function name - text or function (without parameters)
+#' @param ... other parameters that will be passed to validation function like 
+#'   \code{udf}, etc.
+new_checks_for_columns <- function(columns, description, severity, function_name, ...) {
+    new_one <- function(column) {
+        new_check(description, severity, function_name, column = column, ...)
+    }
+    Map(columns, f = new_one) 
 }
 
 #' Execute check one check on data

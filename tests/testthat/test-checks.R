@@ -40,3 +40,17 @@ test_that("Function new check returns list object", {
 #test_that("Function add_ccheck increases number of elements in group by 1")
 
 #test_that("only check can be included into group")
+
+test_that("add checks for columns returns list of length equal to number of column names", {
+  group   <- new_group
+  columns <- c("A", "B", "C")
+  checks  <- new_checks_for_columns(
+    columns = columns,
+    description = "New check for testing", 
+    severity = severity[[1]], 
+    function_name = identity
+    )
+  expect_equal(length(checks), 3)
+  expect_equal(length(add_check(group, checks)), 3)
+
+})
