@@ -6,7 +6,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "R -e 'devtools::document(quiet = T); devtools::build(quiet = T)'",
+            "command": "R -e 'devtools::document(quiet = F); devtools::install(quiet = F)'",
             "group": {
                 "kind": "build",
                 "isDefault": true
