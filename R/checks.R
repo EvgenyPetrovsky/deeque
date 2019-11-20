@@ -47,6 +47,12 @@ new_check <- function(description, severity, function_name, ...) {
     if (typeof(function_name) == "closure") {
         function_name = as.character(substitute(function_name))
     }
+    if (!severity %in% names(deeque::severity)) {
+        stop(paste(
+            "argument 'severity' =", 
+            severity, 
+            "is not valid value registered in deeque::severity"))
+    }
     list(
         description = description,
         severity = severity,
