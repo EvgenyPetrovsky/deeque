@@ -33,7 +33,7 @@ col_hasCompleteness <- function(data, column, udf) {
 #' @param data dataframe
 #' @param column column name
 col_isUnique <- function(data, column) {
-    stop_if_miss_columns()
+    stop_if_miss_columns(data, column)
     # index of 1st duplicated element (0 - no duplicates)
     idx <- anyDuplicated(data[[column]])
     r <- idx == 0
@@ -74,7 +74,7 @@ col_hasDistinctness <- function(data, column, udf) {
     # Distinctness: |V| / N
     stop_if_miss_columns(data, column)
     vals <- data[[column]]
-    V <- unqiue(vals)
+    V <- unique(vals)
     distinctness <- length(V) / length(vals)
     r <- udf(distinctness)
     r
