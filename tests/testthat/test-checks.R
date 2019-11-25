@@ -29,15 +29,43 @@ test_that("Function new check returns list object", {
   expect_equal(is.list(c), TRUE)
 })
 
-#test_that("function new check fails if there is no description provided", {})
+test_that("function new check fails if no description provided", {
+  expect_error(
+    new_check(severity = "INFO", function_name = col_isComplete, column = "a"),
+    message = "description.+ missing"
+  )
+})
 
-#test_that("Function new_check fails if there is no severity defined or severity is invalid", {})
+test_that("Function new_check fails if no severity defined", {
+  expect_error(
+    new_check(description = "test", function_name = col_isComplete, column = "a"),
+    message = "severity.+ missing"
+  )
+})
 
-#test_that("Function new_check fails if function is not defined") ???
+test_that("Function new_check fails if severity is invalid", {
+  #new_check(description = "test", severity = "JOKE", function_name = col_isComplete, column = "a")
+  expect_error(
+    new_check(description = "test", severity = "JOKE", function_name = col_isComplete, column = "a"),
+    message = "severity.+valid.deequee::severity"
+  )
+})
 
-#test_that("Function new check returns object with elements 'description', 'severity', 'function_name', 'parameters'", {})
+#test_that("Function new_check fails if function is not defined", {})
 
-#test_that("Function add_ccheck increases number of elements in group by 1")
+test_that("Function new check returns object with elements 'description', 'severity', 'function_name', 'parameters'", {
+  c <- new_check("Test", "INFO", "column_1", deeque::col_isComplete)
+  attr <- c("description", "severity", "function_name", "parameters")
+  expect_equal(all(attr %in% names(c)), TRUE)
+})
+
+test_that("Function add_check increases number of elements in group by 1", {
+  g0 <- new_group()
+  c  <- new_check("Test", "INFO", "column_1", deeque::col_isComplete)
+  g1 <- add_check(g0, c)
+  expect_equal(length(g0), 0)
+  expect_equal(length(g1), 1)
+})
 
 #test_that("only check can be included into group")
 
