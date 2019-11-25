@@ -68,3 +68,14 @@ udf_between <- function(
         function(value) {FALSE}
     }
 }
+
+#' Equal to function
+#'
+#' Function returns another function that checks if given value
+#' is equal to \code{x}
+#'
+#' @export
+#' @param x - value to compare with.
+udf_eq <- function(x) {
+    function(value) identical(value, x)
+}

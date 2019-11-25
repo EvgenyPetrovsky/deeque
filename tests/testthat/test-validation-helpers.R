@@ -159,3 +159,31 @@ test_that("'Between' function generates another function that works as expected"
   expect_equal(fb(x2)  , TRUE)
   expect_equal(fb(x2+1), FALSE)
 })
+
+# udf_eq
+test_that("'Equal to' function generates another function", {
+  expect_equal(typeof(udf_eq(3)), "closure")
+})
+
+test_that("'Equal to' function generates another function that takes one parameter", {
+  x <- 3
+  f <- udf_eq(x)
+  expect_equal(length(formals(f)), 1)
+})
+
+test_that("'Equal to' function generates another function that returns boolean result", {
+  x <- 3
+  f <- udf_eq(x)
+  expect_equal(typeof(f(x)), "logical")
+})
+
+test_that("'Equal to' function generates another function that works as expected", {
+  x <- 3
+  f <- udf_eq(x)
+  expect_equal(udf_eq(1)(1), TRUE)
+  expect_equal(udf_eq(1)(.9999), FALSE)
+  expect_equal(udf_eq(1/3)(1/3), TRUE)
+  expect_equal(udf_eq(1/3)("Hello world"), FALSE)
+  expect_equal(udf_eq("X")("X"), TRUE)
+  expect_equal(udf_eq(TRUE)(TRUE), TRUE)
+})
