@@ -77,5 +77,5 @@ udf_between <- function(
 #' @export
 #' @param x - value to compare with.
 udf_eq <- function(x) {
-    function(value) identical(value, x)
+    function(value) isTRUE(all.equal(value, x))
 }
