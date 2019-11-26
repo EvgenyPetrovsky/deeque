@@ -50,18 +50,21 @@ test_that("col_hasDistinctness returns proper result", {
 })
 
 # col_isInLOV
-test_that("col_isInLOV returns proper result", {
+test_that_lov_thing <- function() {
   data <- df(a = 1:3, b = c(1, 2, NA), c = c(1, NA, NA), d = c(1, 1, 3))
   expect_equal(col_isInLOV(data, "a", c(1, 3)), c(T,F,T))
   expect_equal(col_isInLOV(data, "a", unique(data$a)), c(T,T,T))
   expect_equal(col_isInLOV(data, "a", 1:10), c(T,T,T))
   expect_equal(col_isInLOV(data, "b", unique(data$b)), c(T,T,T))
+}
+test_that("col_isInLOV returns proper result", {
+  test_that_lov_thing()
 })
 
 # col_isContainedIn
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_isContainedIn returns proper result (similar to col_isInLOV)", {
+  test_that_lov_thing()
+})
 
 # col_hasConsistentType
 #test_that("", {
@@ -69,54 +72,139 @@ test_that("col_isInLOV returns proper result", {
 #})
 
 # col_isNonNegative
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_isNonNegative returns proper result", {
+  data <- df(
+    a = c(-1, 0, 1, NA)
+  )
+  expect_equal(col_isNonNegative(data, "a"), c(F, T, T, NA))
+})
 
 # col_isLessThan
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_isLessThan returns proper result", {
+  data <- df(
+    a = c(0, 0, 0, 0),
+    b = c(-1, 0, 1, NA)
+  )
+  expect_equal(col_isLessThan(data, "a", "b"), c(F, F, T, NA))
+})
 
 # col_isNotLessThan
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_isNotLessThan returns proper result", {
+  data <- df(
+    a = c(0, 0, 0, 0),
+    b = c(-1, 0, 1, NA)
+  )
+  expect_equal(col_isNotLessThan(data, "a", "b"), c(T, T, F, NA))
+})
 
 # col_isGreaterThan
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_isGreaterThan returns proper result", {
+  data <- df(
+    a = c(0, 0, 0, 0),
+    b = c(-1, 0, 1, NA)
+  )
+  expect_equal(col_isGreaterThan(data, "a", "b"), c(T, F, F, NA))
+})
 
 # col_isNotGreaterThan
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_isGreatercol_isNotGreaterThanThan returns proper result", {
+  data <- df(
+    a = c(0, 0, 0, 0),
+    b = c(-1, 0, 1, NA)
+  )
+  expect_equal(col_isNotGreaterThan(data, "a", "b"), c(F, T, T, NA))
+})
 
 # col_hasValue
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasValue returns proper result", {
+  data <- df(
+    a = c("A", "AA", "AAA", "AAAA", "AAAAA"),
+    b = 1:5,
+    stringsAsFactors = FALSE
+  )
+  f_a <- function(x) nchar(x) < 3
+  f_b <- function(x) x < 3
+  expect_equal(col_hasValue(data, "a", f_a), c(T, T, F, F, F))
+  expect_equal(col_hasValue(data, "b", f_b), c(T, T, F, F, F))
+})
 
 # col_hasAllValues
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasAllValues returns proper result", {
+  data <- df(
+    a = 1:5,
+    b = LETTERS[1:5]
+  )
+  expect_equal(col_hasAllValues(data, "a", 1:3), TRUE)
+  expect_equal(col_hasAllValues(data, "a", 1:5), TRUE)
+  expect_equal(col_hasAllValues(data, "a", 1:6), FALSE)
+  expect_equal(col_hasAllValues(data, "a", 6), FALSE)
+  expect_equal(col_hasAllValues(data, "b", LETTERS[1:3]), TRUE)
+  expect_equal(col_hasAllValues(data, "b", LETTERS[1:5]), TRUE)
+  expect_equal(col_hasAllValues(data, "b", LETTERS[1:6]), FALSE)
+  expect_equal(col_hasAllValues(data, "b", LETTERS[6]), FALSE)
+})
 
 # col_hasAnyValue
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasAnyValue returns proper result", {
+  data <- df(
+    a = 1:5,
+    b = LETTERS[1:5]
+  )
+  expect_equal(col_hasAnyValue(data, "a", 1:3), TRUE)
+  expect_equal(col_hasAnyValue(data, "a", 1:5), TRUE)
+  expect_equal(col_hasAnyValue(data, "a", 1:6), TRUE)
+  expect_equal(col_hasAnyValue(data, "a", 6), FALSE)
+  expect_equal(col_hasAnyValue(data, "b", LETTERS[1:3]), TRUE)
+  expect_equal(col_hasAnyValue(data, "b", LETTERS[1:5]), TRUE)
+  expect_equal(col_hasAnyValue(data, "b", LETTERS[1:6]), TRUE)
+  expect_equal(col_hasAnyValue(data, "b", LETTERS[6]), FALSE)
+})
 
 # col_satisfies
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_satisfies returns proper result", {
+  data <- df(
+    a = c("A", "AA", "AAA", "AAAA", "AAAAA"),
+    b = 1:5,
+    stringsAsFactors = FALSE
+  )
+  f_a <- function(x) nchar(x$a) < 3
+  f_b <- function(x) x$b < 3
+  expect_equal(col_satisfies(data, f_a), c(T, T, F, F, F))
+  expect_equal(col_satisfies(data, f_b), c(T, T, F, F, F))
+})
 
 # col_satisfiesIf
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_satisfiesIf returns proper result", {
+  Y <- "Y"; N <- "N"
+  data <- df(
+    a = -2:2,
+    c = c(-9, -5, +6, +9, +12),
+    d = c(-1, +3, -6, +9, +13),
+    e = c(N, N, Y, Y, Y),
+    f = c(NA, NA, -1.01, +0.25, NA),
+    stringsAsFactors = FALSE
+  )
+  expect_equal(
+    col_satisfiesIf(data,
+      predicate    = function(x) with(x, a <= 1),
+      if_predicate = function(x) with(x, a >= 0)),
+    c(NA, NA, T, T, F))
+  expect_equal(
+    col_satisfiesIf(data,
+      predicate    = function(x) with(x, c %% 3 == 0),
+      if_predicate = function(x) with(x, c > 0)),
+    c(NA, NA, T, T, T))
+  expect_equal(
+    col_satisfiesIf(data,
+      predicate    = function(x) with(x, d > 0),
+      if_predicate = function(x) with(x, d %% 3 == 0)),
+    c(NA, T, F, T, NA))
+  expect_equal(
+    col_satisfiesIf(data,
+      predicate    = function(x) with(x, !is.na(f)),
+      if_predicate = function(x) with(x, e == Y)),
+    c(NA, NA, T, T, F))
+})
 
 # col_hasPredictability
 #test_that("", {
@@ -129,19 +217,43 @@ test_that("col_isInLOV returns proper result", {
 #})
 
 # col_hasCountDistinct
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasCountDistinct returns proper result", {
+  data <- df(
+    a = 1:26,
+    b = LETTERS,
+    c = sample.int(n=10, size=26, replace=T),
+    stringsAsFactors = F
+  )
+  expect_equal(col_hasCountDistinct(data, "a", udf_eq(26)), TRUE)
+  expect_equal(col_hasCountDistinct(data, "b", udf_eq(26)), TRUE)
+  expect_equal(col_hasCountDistinct(data, "c", udf_le(10)), TRUE)
+})
 
 # col_hasMin
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasMin returns proper result", {
+  data <- df(
+    a = 1:26,
+    b = LETTERS,
+    c = sample.int(n=10, size=26, replace=T),
+    stringsAsFactors = F
+  )
+  expect_equal(col_hasMin(data, "a", udf_gt(1)), FALSE)
+  expect_equal(col_hasMin(data, "b", udf_eq("A")), TRUE)
+  expect_equal(col_hasMin(data, "c", udf_gt(0)), TRUE)
+})
 
 # col_hasMax
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasMax returns proper result", {
+  data <- df(
+    a = 1:26,
+    b = LETTERS,
+    c = sample.int(n=10, size=26, replace=T),
+    stringsAsFactors = F
+  )
+  expect_equal(col_hasMax(data, "a", udf_lt(26)), FALSE)
+  expect_equal(col_hasMax(data, "b", udf_eq("Z")), TRUE)
+  expect_equal(col_hasMax(data, "c", udf_le(10)), TRUE)
+})
 
 # col_hasMean
 #test_that("", {
