@@ -4,17 +4,17 @@
 \alias{col_satisfiesIf}
 \title{validation whether all rows matching 1st predicate also match 2nd predicate}
 \usage{
-col_satisfiesIf(data, predicate_1, predicate_2)
+col_satisfiesIf(data, predicate, if_predicate)
 }
 \arguments{
 \item{data}{dataframe}
 
-\item{predicate_1}{filter function that takes \code{data} as a parameter and
+\item{predicate}{check function that takes \code{data} as a parameter and
+returns TRUE if records satisy predicate of FALSE if not}
+
+\item{if_predicate}{filter function that takes \code{data} as a parameter and
 returns TRUE / FALSE. Records marked with TRUE will be checked by second
 predicate}
-
-\item{predicate_2}{check function that takes \code{data} as a parameter and
-returns TRUE if records satisy predicate of FALSE if not}
 }
 \description{
 validation whether all rows matching 1st predicate also match 2nd predicate

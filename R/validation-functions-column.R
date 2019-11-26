@@ -200,7 +200,6 @@ col_hasValue <- function(data, column, predicate) {
     stop_if_miss_columns(data, column)
     r <- predicate(data[[column]])
     r
-
 }
 
 #' All values from list present in column
@@ -224,8 +223,7 @@ col_hasAllValues <- function(data, column, lov) {
 #' @param lov list of values given as vector
 col_hasAnyValue <- function(data, column, lov) {
     unique_vals <- unique(data[[column]])
-    present_vals <- unique_vals %in% lov
-    r <- sum(present_vals) > 0
+    r <- any(unique_vals %in% lov)
     r
 }
 
@@ -244,16 +242,19 @@ col_satisfies <- function(data, predicate) {
 #'
 #' @export
 #' @param data dataframe
-#' @param predicate_1 filter function that takes \code{data} as a parameter and
+#' @param predicate check function that takes \code{data} as a parameter and
+#'   returns TRUE if records satisy predicate of FALSE if not
+#' @param if_predicate filter function that takes \code{data} as a parameter and
 #'   returns TRUE / FALSE. Records marked with TRUE will be checked by second
 #'   predicate
-#' @param predicate_2 check function that takes \code{data} as a parameter and
-#'   returns TRUE if records satisy predicate of FALSE if not
-col_satisfiesIf <- function(data, predicate_1, predicate_2) {
-    r1 <- predicate_1(data)
-    r2 <- predicate_2(data)
-    r1[r1 == FALSE] <- NA
-    r <- r1 & r2
+col_satisfiesIf <- function(data, predicate, if_predicate) {
+    # condition
+    c <- if_predicate(data)
+    # result
+    v <- predicate(data)
+    # in case condition is not met - place NA values into result
+    r <- v & c
+    r[c == FALSE] <- NA
     r
 }
 
@@ -285,8 +286,8 @@ col_hasTypeConsistency <- function(data, column, udf) {
 col_hasCountDistinct <- function(data, column, udf) {
     stop_if_miss_columns(data, column)
     vals <- data[[column]]
-    V <- unique(vals[!is.na(vals)])
-    r <- udf(V)
+    V <- unique(vals)
+    r <- udf(length(V))
     r
 }
 
