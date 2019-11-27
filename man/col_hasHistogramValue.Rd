@@ -4,7 +4,7 @@
 \alias{col_hasHistogramValue}
 \title{Has histogram value}
 \usage{
-col_hasHistogramValue(data, column, udf)
+col_hasHistogramValue(data, column, udf, ...)
 }
 \arguments{
 \item{data}{dataframe to check}
@@ -12,6 +12,8 @@ col_hasHistogramValue(data, column, udf)
 \item{column}{column name to check}
 
 \item{udf}{user-defined function to apply to histogram value found}
+
+\item{...}{other parameters that are passed to \code{hist} function}
 }
 \description{
 Function to build histogram object and examine it with user-defined function

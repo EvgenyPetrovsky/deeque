@@ -256,19 +256,79 @@ test_that("col_hasMax returns proper result", {
 })
 
 # col_hasMean
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasMean returns proper result", {
+  data <- df(
+    a = 1:26,
+    b = replicate(26, 0),
+    c = sample.int(n=10, size=26, replace=T),
+    d = c(NA, replicate(25, 5)),
+    stringsAsFactors = F
+  )
+  expect_equal(col_hasMean(data, "a", udf_eq(13.5)), TRUE)
+  expect_equal(col_hasMean(data, "b", udf_eq(0)), TRUE)
+  expect_equal(col_hasMean(data, "c", udf_between(0,10)), TRUE)
+  expect_equal(col_hasMean(data, "d", udf_eq(5)), TRUE)
+})
 
 # col_hasStandardDeviation
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasStandardDeviation returns proper result", {
+  
+  data <- df(
+    a = 1:26,
+    b = replicate(26, 0),
+    c = sample.int(n=10, size=26, replace=T),
+    d = c(NA, replicate(25, 5)),
+    stringsAsFactors = F
+  )
+  expect_equal(col_hasStandardDeviation(data, "a", udf_eq(sd(data$a))), TRUE)
+  expect_equal(col_hasStandardDeviation(data, "b", udf_eq(0)), TRUE)
+  expect_equal(col_hasStandardDeviation(data, "c", udf_between(0,10)), TRUE)
+  expect_equal(col_hasStandardDeviation(data, "d", udf_eq(0)), TRUE)
+})
 
 # col_hasQuantile
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasQuantile returns proper result", {
+  data <- df(
+    a = seq(from=-1.5, to=+1.5, by=1),
+    b = c(NA, 1, NA, 3),
+    c = sample.int(n=10, size=4)
+  )
+
+  expect_equal(
+    col_hasQuantile(data, "a", probability = 0.5, udf_eq(0)), 
+    TRUE)
+  expect_equal(
+    col_hasQuantile(data, "a", probability = 0, udf_eq(-1.5)), 
+    TRUE)
+  expect_equal(
+    col_hasQuantile(data, "a", probability = 1, udf_eq(1.5)), 
+    TRUE)
+  expect_equal(
+    col_hasQuantile(data, "b", probability = 0.5, udf_eq(2)),
+    TRUE)
+  expect_equal(
+    col_hasQuantile(data, "b", probability = 0, udf_eq(1)), 
+    TRUE)
+  expect_equal(
+    col_hasQuantile(data, "b", probability = 1, udf_eq(3)), 
+    TRUE)
+  expect_equal(
+    col_hasQuantile(data, "c", probability = .5, udf_eq(quantile(data$c, .5, names = F))), 
+    TRUE)
+  expect_equal(
+    col_hasQuantile(data, "c", probability = 0, udf_eq(min(data$c))), 
+    TRUE)
+  expect_equal(
+    col_hasQuantile(data, "c", probability = 1, udf_eq(max(data$c))), 
+    TRUE)
+  expect_error(
+    col_hasQuantile(data, "c", probability = 1.1, udf_eq(NA)), 
+    message = "must be in range 0..1")
+  expect_error(
+    col_hasQuantile(data, "c", probability = -.1, udf_eq(NA)), 
+    message = "must be in range 0..1")
+  
+})
 
 # col_hasEntropy
 #test_that("", {

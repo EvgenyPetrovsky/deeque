@@ -335,7 +335,7 @@ col_hasMean <- function(data, column, udf) {
 #' @param column column name to check
 #' @param udf user-defined function to apply to standard deviation found
 col_hasStandardDeviation <- function(data, column, udf) {
-    stdev <- sd(data[[column]])
+    stdev <- sd(data[[column]], na.rm = T)
     r <- udf(stdev)
     r
 }
@@ -355,7 +355,6 @@ col_hasStandardDeviation <- function(data, column, udf) {
 #' @param udf user-defined function to apply to quantile found
 col_hasQuantile <- function(data, column, probability, udf) {
     stop_if_miss_columns(data, column)
-    stop_if_not_implemented("hasApproxQuantil", not_implemented = TRUE)
     if (!tab_hasColumnOfType(data, column, col_type$numeric)) {
         warning(paste("column", column, "has type incompatible with numeric"))
         return(FALSE)
@@ -364,7 +363,7 @@ col_hasQuantile <- function(data, column, probability, udf) {
     if (probability < 0 | probability > 1) {
         stop(paste("probability has value", probability, "but it must be in range 0..1"))
     }
-    qv <- quantile(vals, probability)
+    qv <- quantile(vals, probability, na.rm = T, names = F)
     r <- udf(qv)
     r
 }
@@ -419,10 +418,11 @@ col_hasMutualInformation <- function(data, column, ref_column, udf ) {
 #' @param data dataframe to check
 #' @param column column name to check
 #' @param udf user-defined function to apply to histogram value found
-col_hasHistogramValue <- function(data, column, udf) {
+#' @param ... other parameters that are passed to \code{hist} function
+col_hasHistogramValue <- function(data, column, udf, ...) {
     stop_if_miss_columns(data, column)
     vals <- data[[column]]
-    hist_val <- hist(vals)
+    hist_val <- hist(x = vals, ...)
     r <- udf(hist_val)
     r
 }
