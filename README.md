@@ -3,7 +3,9 @@
 
 # dataque
 
-Data Quality control framework for dataframes in R
+Data Quality control framework for dataframes in R.
+
+With some creativity other checks can be performed. For example: files can be ckecked if data is put into datamart.
 
 ## purpose
 
@@ -87,6 +89,6 @@ Results of execution may be:
 
 ## important information about functions
 
-Some functions operate with statistics (like min, max, uniqueness ratio) and can return only one value, this can be TRUE / FALSE or ratio (between 0 and 1). Others operate on lower lever and applied to every value. They return logical vector of values. Both of these cases may be properly treated by basic data.frame functionality and data manipulation packages such as dlpyr. It is up to user to decide what result to use. 
+Some functions operate with statistics (like min, max, uniqueness ratio) and can return only one logical value, this can be TRUE / FALSE. Others operate on lower lever and return value for every element. They return logical vector of values. Both of these cases may be properly treated by basic data.frame functionality and data manipulation packages such as dlpyr. It is up to user to decide what result to use.
 
 However, when implementing functions, one should think what is proper result and either return vector for every row that was checked or return 1 value. There is no reason to replicate one value to number of rows.

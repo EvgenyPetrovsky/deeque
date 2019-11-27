@@ -4,7 +4,7 @@ Title: Data Quality framework for data frames in R
 Version: 0.1.0
 Author: Evgeny Petrovskiy
 Maintainer: Evgeny Petrovskiy <EvgenyPetrovsky@GitHub.com>
-Description: This package can be used to check any tabular data
+Description: This package can be used to check tabular data
     Package was inspired by Spark implementation and related paper.
     See details on github: awslabs/deequ
 License: MIT + file LICENSE
