@@ -50,30 +50,6 @@ tab_hasColumns <- function(data, columns) {
   r
 }
 
-#' Function that checks whether dataframe column is of specific type
-#'
-#' @export
-#' @param data dataframe
-#' @param column column name
-#' @param type text name of the type - see \link{col_type}
-tab_hasColumnOfType <- function(
-  data, column,
-  type = c("Date", "numeric", "integer", "logical", "character", "factor")
-) {
-  type <- match.arg(type)
-  stop_if_miss_columns(data, column)
-  r <- with(list(col = data[[column]]), {
-    if (type == "Date" & is.numeric.Date(col)) {TRUE}
-    else if (type == "numeric" & is.numeric(col)) {TRUE}
-    else if (type == "integer" & is.integer(col)) {TRUE}
-    else if (type == "logical" & is.logical(col)) {TRUE}
-    else if (type == "character" & is.character(col)) {TRUE}
-    else if (type == "factor" & is.factor(col)) {TRUE}
-    else {FALSE}
-  })
-  r
-}
-
 #' Function that checks whether combination of columns contains unique value
 #'
 #' @export

@@ -268,6 +268,30 @@ col_hasPredictability <- function(data, column, ref_columns, udf) {
     stop_if_not_implemented("hasPredictability", not_implemented = TRUE)
 }
 
+#' Column is of specific type
+#'
+#' @export
+#' @param data dataframe
+#' @param column column name
+#' @param type text name of the type - see \link{col_type}
+col_hasType <- function(
+  data, column,
+  type = c("Date", "numeric", "integer", "logical", "character", "factor")
+) {
+  type <- match.arg(type)
+  stop_if_miss_columns(data, column)
+  r <- with(list(col = data[[column]]), {
+    if (type == "Date" & is.numeric.Date(col)) {TRUE}
+    else if (type == "numeric" & is.numeric(col)) {TRUE}
+    else if (type == "integer" & is.integer(col)) {TRUE}
+    else if (type == "logical" & is.logical(col)) {TRUE}
+    else if (type == "character" & is.character(col)) {TRUE}
+    else if (type == "factor" & is.factor(col)) {TRUE}
+    else {FALSE}
+  })
+  r
+}
+
 #' custom validation of the maximum fraction of values of the same data type
 #'
 #' @param data dataframe
@@ -355,7 +379,7 @@ col_hasStandardDeviation <- function(data, column, udf) {
 #' @param udf user-defined function to apply to quantile found
 col_hasQuantile <- function(data, column, probability, udf) {
     stop_if_miss_columns(data, column)
-    if (!tab_hasColumnOfType(data, column, col_type$numeric)) {
+    if (!col_hasType(data, column, col_type$numeric)) {
         warning(paste("column", column, "has type incompatible with numeric"))
         return(FALSE)
     }
@@ -439,7 +463,7 @@ col_hasCorrelation <- function(data, column, ref_column, udf) {
     stop_if_miss_columns(data, c(column, ref_column))
     vals <- data[[column]]
     ref_vals <- data[[ref_column]]
-    c <- corr(vals, ref_vals)
+    c <- cor(vals, ref_vals)
     r <- udf(c)
     r
 }
