@@ -29,5 +29,5 @@ save_group <- function(group, file_name) {
 #' @export 
 #' @param file_name source filename that contains group of checks
 load_group <- function(file_name) {
-    readRDS(group, file_name)
+    readRDS(file_name)
 }
