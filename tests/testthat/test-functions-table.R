@@ -80,41 +80,6 @@ test_that("tab_hasColumns check returns FALSE when any of columns does not exist
   expect_equal(tab_hasColumns(tab, c("a", "b", "c", "A")), FALSE)
 })
 
-#tab_hasColumnOfType
-test_that("tab_hasColumnOfType recogize types properly", {
-
-  typeOf <- function(val, is) {
-    dat <- data.frame("a" = val, stringsAsFactors = F)
-    tab_hasColumnOfType(dat, "a", is)
-  }
-
-  typs <- list(
-    "numeric" = 1.1,
-    "integer" = 1L,
-    "logical" = TRUE,
-    "character" = "Hello",
-    "factor" = factor("A")
-  )
-  # matrix where row is actual type and column is hypothetical type
-  mc <- c(
-    T,F,F,F,F,
-    T,T,F,F,F,
-    F,F,T,F,F,
-    F,F,F,T,F,
-    F,F,F,F,T
-  )
-  mx <- matrix(
-    data = mc, nrow = 5, ncol = 5, byrow = T, 
-    dimnames = replicate(2, list(names(typs))))
-
-  for (typ in names(typs)) {
-    val <- typs[[typ]]
-    for (idx in names(typs)) {
-      expect_equal(typeOf(val, is = idx), mx[typ, idx])
-    }
-  }
-})
-
 # tab_hasUniqueKey
 test_that("tab_hasUniqueKey stops when dataframe has 0 columns", {
   tab <- data.frame()

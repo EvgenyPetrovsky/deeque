@@ -211,6 +211,46 @@ test_that("col_satisfiesIf returns proper result", {
 #  expect_equal(,)
 #})
 
+#col_hasType
+test_that("col_hasType recognize types properly", {
+
+  typeOf <- function(val, is) {
+    dat <- data.frame("a" = val, stringsAsFactors = F)
+    col_hasType(dat, "a", is)
+  }
+
+  typs <- list(
+    "numeric" = 1.1,
+    "integer" = 1L,
+    "logical" = TRUE,
+    "character" = "Hello",
+    "factor" = factor("A")
+  )
+  # matrix where row is actual type and column is hypothetical type
+  mc <- c(
+    T,F,F,F,F,
+    T,T,F,F,F,
+    F,F,T,F,F,
+    F,F,F,T,F,
+    F,F,F,F,T
+  )
+  mx <- matrix(
+    data = mc, nrow = length(typs), length(typs), byrow = T, 
+    dimnames = replicate(2, list(names(typs))))
+
+  for (typ in names(typs)) {
+    val <- typs[[typ]]
+    for (idx in names(typs)) {
+      expect_equal(typeOf(val, is = idx), mx[typ, idx])
+    }
+  }
+})
+
+test_that("col_hasType fails when requested to check unknown type", {
+  data <- df(a = 1:3)
+  expect_error(col_hasType(data, "a", "dummy"))
+})
+
 # col_hasTypeConsistency
 #test_that("", {
 #  expect_equal(,)
@@ -346,9 +386,16 @@ test_that("col_hasQuantile returns proper result", {
 #})
 
 # col_hasCorrelation
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasCorrelation returns proper result", {
+  data <- df(
+    a = 1:10,
+    b = 10:1,
+    c = sample.int(10, 10)
+  )
+  expect_equal(col_hasCorrelation(data, "a", "a", udf_eq(1)),TRUE)
+  expect_equal(col_hasCorrelation(data, "a", "b", udf_eq(-1)),TRUE)
+  expect_equal(col_hasCorrelation(data, "a", "c", udf_eq(cor(data$a, data$c))),TRUE)
+})
 
 # col_hasNoAnomalies
 #test_that("", {
