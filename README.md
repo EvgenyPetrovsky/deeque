@@ -5,7 +5,7 @@
 
 Data Quality control framework for dataframes in R.
 
-With some creativity other checks can be performed. For example: files can be ckecked if data is put into datamart.
+With some creativity checks can be performed on anything that fits dataframe. For example: directory can be checked for presence of all required files.
 
 ## purpose
 
@@ -19,7 +19,7 @@ Install package from github using `devtools` package
 devtools::install_github(repo = "EvgenyPetrovsky/deeque")
 ```
 
-define test data-set
+define test data-set and check it
 
 ```R
 library(magrittr)
@@ -52,7 +52,9 @@ checks <-
 checks %>% convert_checks_to_df()
 
 # verify dataset using checks defined
-chk_res <- test_df %>% run_checks(checks) 
+chk_res <- test_df %>% run_checks(checks)
+
+# view dataset in Rstudio
 View(chk_res %>% convert_run_results_to_df())
 
 # another option verify; stop execution if condition is not satisfied
@@ -62,6 +64,47 @@ test_df %T>%
     condition = severity_under_threshold(severity$WARNING)
   ) %>%
   head(5)
+```
+
+or check folder content for all required files
+
+```R
+library(magrittr)
+library(deeque)
+
+# dir() function should be called here with proper parameters
+# dir_content <- dir(recursive = TRUE)
+dir_content <- c(
+  "REAMDE.txt",
+  "config.yaml",
+  "input_data/internal/employees.csv",
+  "input_data/internal/goals.csv",
+  "input_data/internal/incidents.csv",
+  "input_data/external/market_rates.csv"
+)
+
+# put dir content into data frame
+test_df <- data.frame(
+  file_name = dir_content,
+  stringsAsFactors = FALSE
+)
+
+# define checks
+checks <-
+  new_group() %>%
+  add_check(new_check(
+    "Data about employees and goals musrt present in internal input folder",
+    "ERROR", col_hasAllValues, column = "file_name",
+    lov = c(
+      "input_data/internal/employees.csv",
+      "input_data/internal/goals.csv")
+  ))
+
+# verify dataset using checks defined
+chk_res <- test_df %>% run_checks(checks)
+
+# view dataset in Rstudio
+View(chk_res %>% convert_run_results_to_df())
 ```
 
 ## structure
