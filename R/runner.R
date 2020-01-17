@@ -52,7 +52,7 @@ analyze_run <- function(check_result, condition) {
 #'   return either TRUE or FALSE
 run_checks_and_proceed <- function(data, checks, condition) {
     result <- run_checks(data, checks)
-    analyze_check_result(result, condition)
+    analyze_run(result, condition)
     return(data)
 }
 

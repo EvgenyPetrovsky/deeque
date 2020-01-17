@@ -4,8 +4,11 @@
 \alias{col_hasType}
 \title{Column is of specific type}
 \usage{
-col_hasType(data, column, type = c("Date", "numeric", "integer",
-  "logical", "character", "factor"))
+col_hasType(
+  data,
+  column,
+  type = c("Date", "numeric", "integer", "logical", "character", "factor")
+)
 }
 \arguments{
 \item{data}{dataframe}

@@ -101,7 +101,7 @@ col_isInLOV <- function(data, column, lov) {
 #' @param column column name
 #' @param alloved_values list of values given as vector
 col_isContainedIn <- function(data, column, alloved_values) {
-    isInLOV(data, column, alloved_values)
+    col_isInLOV(data, column, alloved_values)
 }
 
 #' The largest fraction of values has the same type
@@ -359,7 +359,11 @@ col_hasMean <- function(data, column, udf) {
 #' @param column column name to check
 #' @param udf user-defined function to apply to standard deviation found
 col_hasStandardDeviation <- function(data, column, udf) {
-    stdev <- sd(data[[column]], na.rm = T)
+    if (!col_hasType(data, column, col_type$numeric)) {
+        warning(paste("column", column, "has type incompatible with numeric"))
+        return(FALSE)
+    }
+    stdev <- stats::sd(data[[column]], na.rm = T)
     r <- udf(stdev)
     r
 }
@@ -387,7 +391,7 @@ col_hasQuantile <- function(data, column, probability, udf) {
     if (probability < 0 | probability > 1) {
         stop(paste("probability has value", probability, "but it must be in range 0..1"))
     }
-    qv <- quantile(vals, probability, na.rm = T, names = F)
+    qv <- stats::quantile(vals, probability, na.rm = T, names = F)
     r <- udf(qv)
     r
 }
@@ -415,6 +419,7 @@ col_hasEntropy <- function(data, column, udf) {
 
 #
 col_hasMutualInformation <- function(data, column, ref_column, udf ) {
+    stop_if_not_implemented("col_hasMutualInformation", not_implemented = TRUE)
     vals1 <- data[[column]]
     vals2 <- data[[ref_column]]
     # dataset size
@@ -428,9 +433,8 @@ col_hasMutualInformation <- function(data, column, ref_column, udf ) {
     #    size <- N
     #    return(cv/size * log(cv/size))
     #}
-
-
-    r <- udf(mutual_info)
+    #r <- udf(mutual_info)
+    NULL
 }
 
 #' Has histogram value
@@ -446,7 +450,7 @@ col_hasMutualInformation <- function(data, column, ref_column, udf ) {
 col_hasHistogramValue <- function(data, column, udf, ...) {
     stop_if_miss_columns(data, column)
     vals <- data[[column]]
-    hist_val <- hist(x = vals, ...)
+    hist_val <- graphics::hist(x = vals, ...)
     r <- udf(hist_val)
     r
 }
@@ -463,12 +467,12 @@ col_hasCorrelation <- function(data, column, ref_column, udf) {
     stop_if_miss_columns(data, c(column, ref_column))
     vals <- data[[column]]
     ref_vals <- data[[ref_column]]
-    c <- cor(vals, ref_vals)
+    c <- stats::cor(vals, ref_vals)
     r <- udf(c)
     r
 }
 
 # time
 col_hasNoAnomalies <- function(data, column, metric, detector) {
-    stop_if_not_implemented("hasNoAnomalies", not_implemented = TRUE)
+    stop_if_not_implemented("col_hasNoAnomalies", not_implemented = TRUE)
 }
