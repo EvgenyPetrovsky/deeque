@@ -4,27 +4,38 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "Devtools: Build and Install",
             "type": "shell",
-            "command": "R -e 'devtools::document(quiet = F); devtools::install(quiet = F)'",
+            "command": [
+                "R -q -e 'devtools::document(quiet = F)'",
+                "R -q -e 'devtools::install(quiet = F)'"],
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
         },
         {
-            "label": "check",
+            "label": "Devtools: Check",
             "type": "shell",
-            "command": "R -e 'devtools::check(quiet = T)'",
+            "command": "R -q -e 'devtools::check(quiet = F)'",
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
         },
         {
-            "label": "test",
+            "label": "Devtools: Run tests",
             "type": "shell",
-            "command": "R -e 'devtools::test(quiet = T)'",
+            "command": "R -q -e 'devtools::test(quiet = F)'",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Devtools: Test coverage",
+            "type": "shell",
+            "command": "R -q -e 'print(devtools::test_coverage())'",
             "group": {
                 "kind": "build",
                 "isDefault": true
