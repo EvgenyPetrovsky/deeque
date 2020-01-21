@@ -1,37 +1,37 @@
 # tab_hasRowCount
 test_that("Empty dataframe has 0 rows", {
   tab <- data.frame()
-  expect_equal(tab_hasRowCount(tab, udf = function(x) {x == 0}), TRUE)
-  expect_equal(tab_hasRowCount(tab, udf = function(x) {x != 0}), FALSE)
+  expect_equal(tab_hasRowCount(tab, udf = function(x) x == 0), TRUE)
+  expect_equal(tab_hasRowCount(tab, udf = function(x) x != 0), FALSE)
 })
 test_that("udf functoin works correct for number of rows check", {
   for (i in sample.int(1000, 5)) {
     tab <- data.frame(col = replicate(i, 42))
-    expect_equal(tab_hasRowCount(tab, udf = function(x) {x == i}), TRUE)
-    expect_equal(tab_hasRowCount(tab, udf = function(x) {x != i}), FALSE)
-    expect_equal(tab_hasRowCount(tab, udf = function(x) {x > i}), FALSE)
-    expect_equal(tab_hasRowCount(tab, udf = function(x) {x < i}), FALSE)
-    expect_equal(tab_hasRowCount(tab, udf = function(x) {x >= i}), TRUE)
-    expect_equal(tab_hasRowCount(tab, udf = function(x) {x <= i}), TRUE)
+    expect_equal(tab_hasRowCount(tab, udf = function(x) x == i), TRUE)
+    expect_equal(tab_hasRowCount(tab, udf = function(x) x != i), FALSE)
+    expect_equal(tab_hasRowCount(tab, udf = function(x) x > i), FALSE)
+    expect_equal(tab_hasRowCount(tab, udf = function(x) x < i), FALSE)
+    expect_equal(tab_hasRowCount(tab, udf = function(x) x >= i), TRUE)
+    expect_equal(tab_hasRowCount(tab, udf = function(x) x <= i), TRUE)
   }
 })
 
 # tab_hasColumnCount
 test_that("empty dataframe has 0 columns", {
   tab <- data.frame()
-  expect_equal(tab_hasColumnCount(tab, udf = function(x) {x == 0}), TRUE)
-  expect_equal(tab_hasColumnCount(tab, udf = function(x) {x != 0}), FALSE)
+  expect_equal(tab_hasColumnCount(tab, udf = function(x) x == 0), TRUE)
+  expect_equal(tab_hasColumnCount(tab, udf = function(x) x != 0), FALSE)
 })
 
 test_that("udf functoin works correct for number of columns check", {
   for (i in sample.int(100, 5)) {
-    tab <- data.frame(Map(f = function(x) {1}, 1:i))
-    expect_equal(tab_hasColumnCount(tab, udf = function(x) {x == i}), TRUE)
-    expect_equal(tab_hasColumnCount(tab, udf = function(x) {x != i}), FALSE)
-    expect_equal(tab_hasColumnCount(tab, udf = function(x) {x > i}), FALSE)
-    expect_equal(tab_hasColumnCount(tab, udf = function(x) {x < i}), FALSE)
-    expect_equal(tab_hasColumnCount(tab, udf = function(x) {x >= i}), TRUE)
-    expect_equal(tab_hasColumnCount(tab, udf = function(x) {x <= i}), TRUE)
+    tab <- data.frame(Map(f = function(x) 1, 1:i))
+    expect_equal(tab_hasColumnCount(tab, udf = function(x) x == i), TRUE)
+    expect_equal(tab_hasColumnCount(tab, udf = function(x) x != i), FALSE)
+    expect_equal(tab_hasColumnCount(tab, udf = function(x) x > i), FALSE)
+    expect_equal(tab_hasColumnCount(tab, udf = function(x) x < i), FALSE)
+    expect_equal(tab_hasColumnCount(tab, udf = function(x) x >= i), TRUE)
+    expect_equal(tab_hasColumnCount(tab, udf = function(x) x <= i), TRUE)
   }
 })
 
@@ -71,7 +71,7 @@ test_that("tab_hasColumns check returns TRUE when all columns exist", {
   expect_equal(tab_hasColumns(tab, c("a", "b", "c")), TRUE)
 })
 
-test_that("tab_hasColumns check returns FALSE when any of columns does not exist", {
+test_that("tab_hasColumns check returns FALSE when one column does not exist", {
   tab <- data.frame(a = 1, b = 1, c = 1)
   expect_equal(tab_hasColumns(tab, "A"), FALSE)
   expect_equal(tab_hasColumns(tab, c("A", "A", "A")), FALSE)
@@ -103,24 +103,24 @@ test_that("tab_hasUniqueKey stops when dataframe has no specified columns", {
   expect_error(tab_hasUniqueKey(tab, c("a", "A")), err_message)
 })
 
-test_that("tab_hasUniqueKey returns TRUE when dataframe column has unique values", {
+test_that("tab_hasUniqueKey returns TRUE when column has unique values", {
   tab <- data.frame(a = c(1:26), b = LETTERS, c = letters)
   expect_equal(tab_hasUniqueKey(tab, c("a")), TRUE)
   expect_equal(tab_hasUniqueKey(tab, c("b")), TRUE)
   expect_equal(tab_hasUniqueKey(tab, c("c")), TRUE)
 })
 
-test_that("tab_hasUniqueKey returns FALSE when dataframe column has non-unique values", {
-  tab <- data.frame(a = c(1,1:10), b = FALSE, c = TRUE)
+test_that("tab_hasUniqueKey returns FALSE when column has non-unique values", {
+  tab <- data.frame(a = c(1, 1:10), b = FALSE, c = TRUE)
   expect_equal(tab_hasUniqueKey(tab, c("a")), FALSE)
   expect_equal(tab_hasUniqueKey(tab, c("b")), FALSE)
   expect_equal(tab_hasUniqueKey(tab, c("c")), FALSE)
 })
 
-test_that("tab_hasUniqueKey returns TRUE when combination of non-unqiue column becomes unique", {
+test_that("tab_hasUniqueKey returns TRUE when combination of columns is unique", {
   tab <- data.frame(
-    a = c(0, 1, 0, 1), 
-    b = c(0, 0, 1, 1), 
+    a = c(0, 1, 0, 1),
+    b = c(0, 0, 1, 1),
     c = c(0, 0, 0, 0))
   expect_equal(tab_hasUniqueKey(tab, c("a")), FALSE)
   expect_equal(tab_hasUniqueKey(tab, c("b")), FALSE)

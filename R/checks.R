@@ -40,17 +40,18 @@ add_checks <- function(group, new_checks) {
 #' concise criteria c) specify when it is applicable (if not always)
 #' @param severity check severity, can be chosen from `severity` list attached
 #' to package
-#' @param function_name validation function name - text or function (without parameters)
+#' @param function_name validation function name - text or function (without
+#' parameters)
 #' @param ... other parameters that will be passed to validation function like
 #'   \code{column}, \code{udf}, etc.
 new_check <- function(description, severity, function_name, ...) {
     if (typeof(function_name) == "closure") {
-        function_name = as.character(substitute(function_name))
+        function_name <- as.character(substitute(function_name))
     }
     if (!severity %in% names(deeque::severity)) {
         stop(paste(
-            "argument 'severity' =", 
-            severity, 
+            "argument 'severity' =",
+            severity,
             "is not valid value registered in deeque::severity"))
     }
     list(
@@ -75,7 +76,9 @@ new_check <- function(description, severity, function_name, ...) {
 #'   parameters)
 #' @param ... other parameters that will be passed to validation function like
 #'   \code{udf}, etc.
-new_checks_for_columns <- function(columns, description, severity, function_name, ...) {
+new_checks_for_columns <- function(
+    columns, description, severity, function_name, ...
+) {
     new_one <- function(column) {
         new_check(description, severity, function_name, column = column, ...)
     }
@@ -94,7 +97,7 @@ new_checks_for_columns <- function(columns, description, severity, function_name
 apply_check <- function(data, check) {
     fun <- check$function_name
     par <- check$parameters
-    par$data = data
+    par$data <- data
     res <- do.call(fun, par)
     list(
         description = check$description,
@@ -125,14 +128,15 @@ severity_rank <- function(severity) {
     # get severities from data
     labels  <- names(deeque::severity)
     # get severity ranks
-    ranks   <- 1:length(labels)
+    ranks   <- seq_len(length(labels))
     # initialize vector of ranks (initially 0 values)
     init <- replicate(n = length(severity), expr = 0)
     # sum replace severity names with ranks
     # if severity name matches to label then add its rank to 0-val vector
     Reduce(
-        f = function(z, x) {z + x * (severity == labels[x])},
+        f = function(z, x) {
+            z + x * (severity == labels[x])
+        },
         x = ranks, init = init
     )
 }
-

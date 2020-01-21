@@ -11,7 +11,9 @@ stop_if_miss_columns <- function(data, columns) {
     data_columns <- colnames(data)
     miss_columns <- setdiff(columns, data_columns)
     if (length(miss_columns) > 0) {
-        columns_text <- paste(paste("'", miss_columns, "'", sep = ""), collapse = ",")
+        columns_text <- paste(
+            paste("'", miss_columns, "'", sep = ""),
+            collapse = ",")
         message_text <- if (length(miss_columns) > 1) {
             paste("Columns", columns_text, "are missing in data frame")
         } else {
@@ -35,8 +37,8 @@ stop_if_not_implemented <- function(name, not_implemented) {
 #------------------------------------------------------------------------------#
 
 #' Ratio of success based on vector of logical values
-#' 
-#' @param logical_vector vector of logical values 
+#'
+#' @param logical_vector vector of logical values
 ratio <- function(logical_vector) {
     if (!is.logical(logical_vector)) {
         stop("Values must be logical (TRUE or FALSE)")

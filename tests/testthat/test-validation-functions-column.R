@@ -44,7 +44,7 @@ test_that("col_hasDistinctness returns proper result", {
   expect_equal(col_hasDistinctness(data, "a", udf_eq(1)), TRUE)
   expect_equal(col_hasDistinctness(data, "b", udf_eq(1)), TRUE)
   expect_equal(col_hasDistinctness(data, "c", udf_eq(1)), FALSE)
-  expect_equal(col_hasDistinctness(data, "d", udf_eq(2/3)), TRUE)
+  expect_equal(col_hasDistinctness(data, "d", udf_eq(2 / 3)), TRUE)
   expect_equal(col_hasDistinctness(data, "d", udf_eq(0.6666)), FALSE)
   expect_equal(col_hasDistinctness(data, "d", udf_between(.9, 1)), FALSE)
 })
@@ -52,11 +52,13 @@ test_that("col_hasDistinctness returns proper result", {
 # col_isInLOV
 test_that_lov_thing <- function() {
   data <- df(a = 1:3, b = c(1, 2, NA), c = c(1, NA, NA), d = c(1, 1, 3))
-  expect_equal(col_isInLOV(data, "a", c(1, 3)), c(T,F,T))
-  expect_equal(col_isInLOV(data, "a", unique(data$a)), c(T,T,T))
-  expect_equal(col_isInLOV(data, "a", 1:10), c(T,T,T))
-  expect_equal(col_isInLOV(data, "b", unique(data$b)), c(T,T,T))
+
+  testthat::expect_equal(col_isInLOV(data, "a", c(1, 3)), c(T, F, T))
+  testthat::expect_equal(col_isInLOV(data, "a", unique(data$a)), c(T, T, T))
+  testthat::expect_equal(col_isInLOV(data, "a", 1:10), c(T, T, T))
+  testthat::expect_equal(col_isInLOV(data, "b", unique(data$b)), c(T, T, T))
 }
+
 test_that("col_isInLOV returns proper result", {
   test_that_lov_thing()
 })
@@ -67,9 +69,9 @@ test_that("col_isContainedIn returns proper result (similar to col_isInLOV)", {
 })
 
 # col_hasConsistentType
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasConsistentType returns proper result", {
+  NULL
+})
 
 # col_isNonNegative
 test_that("col_isNonNegative returns proper result", {
@@ -207,9 +209,9 @@ test_that("col_satisfiesIf returns proper result", {
 })
 
 # col_hasPredictability
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasPredictability returns proper result", {
+  NULL
+})
 
 #col_hasType
 test_that("col_hasType recognize types properly", {
@@ -228,14 +230,14 @@ test_that("col_hasType recognize types properly", {
   )
   # matrix where row is actual type and column is hypothetical type
   mc <- c(
-    T,F,F,F,F,
-    T,T,F,F,F,
-    F,F,T,F,F,
-    F,F,F,T,F,
-    F,F,F,F,T
+    T, F, F, F, F,
+    T, T, F, F, F,
+    F, F, T, F, F,
+    F, F, F, T, F,
+    F, F, F, F, T
   )
   mx <- matrix(
-    data = mc, nrow = length(typs), length(typs), byrow = T, 
+    data = mc, nrow = length(typs), length(typs), byrow = T,
     dimnames = replicate(2, list(names(typs))))
 
   for (typ in names(typs)) {
@@ -252,16 +254,16 @@ test_that("col_hasType fails when requested to check unknown type", {
 })
 
 # col_hasTypeConsistency
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasTypeConsistency returns proper result", {
+  NULL
+})
 
 # col_hasCountDistinct
 test_that("col_hasCountDistinct returns proper result", {
   data <- df(
     a = 1:26,
     b = LETTERS,
-    c = sample.int(n=10, size=26, replace=T),
+    c = sample.int(n = 10, size = 26, replace = T),
     stringsAsFactors = F
   )
   expect_equal(col_hasCountDistinct(data, "a", udf_eq(26)), TRUE)
@@ -274,7 +276,7 @@ test_that("col_hasMin returns proper result", {
   data <- df(
     a = 1:26,
     b = LETTERS,
-    c = sample.int(n=10, size=26, replace=T),
+    c = sample.int(n = 10, size = 26, replace = T),
     stringsAsFactors = F
   )
   expect_equal(col_hasMin(data, "a", udf_gt(1)), FALSE)
@@ -287,7 +289,7 @@ test_that("col_hasMax returns proper result", {
   data <- df(
     a = 1:26,
     b = LETTERS,
-    c = sample.int(n=10, size=26, replace=T),
+    c = sample.int(n = 10, size = 26, replace = T),
     stringsAsFactors = F
   )
   expect_equal(col_hasMax(data, "a", udf_lt(26)), FALSE)
@@ -300,90 +302,92 @@ test_that("col_hasMean returns proper result", {
   data <- df(
     a = 1:26,
     b = replicate(26, 0),
-    c = sample.int(n=10, size=26, replace=T),
+    c = sample.int(n = 10, size = 26, replace = T),
     d = c(NA, replicate(25, 5)),
     stringsAsFactors = F
   )
   expect_equal(col_hasMean(data, "a", udf_eq(13.5)), TRUE)
   expect_equal(col_hasMean(data, "b", udf_eq(0)), TRUE)
-  expect_equal(col_hasMean(data, "c", udf_between(0,10)), TRUE)
+  expect_equal(col_hasMean(data, "c", udf_between(0, 10)), TRUE)
   expect_equal(col_hasMean(data, "d", udf_eq(5)), TRUE)
 })
 
 # col_hasStandardDeviation
 test_that("col_hasStandardDeviation returns proper result", {
-  
+
   data <- df(
     a = 1:26,
     b = replicate(26, 0),
-    c = sample.int(n=10, size=26, replace=T),
+    c = sample.int(n = 10, size = 26, replace = T),
     d = c(NA, replicate(25, 5)),
     stringsAsFactors = F
   )
   expect_equal(col_hasStandardDeviation(data, "a", udf_eq(sd(data$a))), TRUE)
   expect_equal(col_hasStandardDeviation(data, "b", udf_eq(0)), TRUE)
-  expect_equal(col_hasStandardDeviation(data, "c", udf_between(0,10)), TRUE)
+  expect_equal(col_hasStandardDeviation(data, "c", udf_between(0, 10)), TRUE)
   expect_equal(col_hasStandardDeviation(data, "d", udf_eq(0)), TRUE)
 })
 
 # col_hasQuantile
 test_that("col_hasQuantile returns proper result", {
   data <- df(
-    a = seq(from=-1.5, to=+1.5, by=1),
+    a = seq(from = -1.5, to = +1.5, by = 1),
     b = c(NA, 1, NA, 3),
-    c = sample.int(n=10, size=4)
+    c = sample.int(n = 10, size = 4)
   )
 
   expect_equal(
-    col_hasQuantile(data, "a", probability = 0.5, udf_eq(0)), 
+    col_hasQuantile(data, "a", probability = 0.5, udf_eq(0)),
     TRUE)
   expect_equal(
-    col_hasQuantile(data, "a", probability = 0, udf_eq(-1.5)), 
+    col_hasQuantile(data, "a", probability = 0, udf_eq(-1.5)),
     TRUE)
   expect_equal(
-    col_hasQuantile(data, "a", probability = 1, udf_eq(1.5)), 
+    col_hasQuantile(data, "a", probability = 1, udf_eq(1.5)),
     TRUE)
   expect_equal(
     col_hasQuantile(data, "b", probability = 0.5, udf_eq(2)),
     TRUE)
   expect_equal(
-    col_hasQuantile(data, "b", probability = 0, udf_eq(1)), 
+    col_hasQuantile(data, "b", probability = 0, udf_eq(1)),
     TRUE)
   expect_equal(
-    col_hasQuantile(data, "b", probability = 1, udf_eq(3)), 
+    col_hasQuantile(data, "b", probability = 1, udf_eq(3)),
     TRUE)
   expect_equal(
-    col_hasQuantile(data, "c", probability = .5, udf_eq(quantile(data$c, .5, names = F))), 
+    col_hasQuantile(
+      data, "c", probability = .5,
+      udf_eq(quantile(data$c, .5, names = F))),
     TRUE)
   expect_equal(
-    col_hasQuantile(data, "c", probability = 0, udf_eq(min(data$c))), 
+    col_hasQuantile(data, "c", probability = 0, udf_eq(min(data$c))),
     TRUE)
   expect_equal(
-    col_hasQuantile(data, "c", probability = 1, udf_eq(max(data$c))), 
+    col_hasQuantile(data, "c", probability = 1, udf_eq(max(data$c))),
     TRUE)
   expect_error(
-    col_hasQuantile(data, "c", probability = 1.1, udf_eq(NA)), 
+    col_hasQuantile(data, "c", probability = 1.1, udf_eq(NA)),
     message = "must be in range 0..1")
   expect_error(
-    col_hasQuantile(data, "c", probability = -.1, udf_eq(NA)), 
+    col_hasQuantile(data, "c", probability = -.1, udf_eq(NA)),
     message = "must be in range 0..1")
-  
+
 })
 
 # col_hasEntropy
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasEntropy returns proper result", {
+  NULL
+})
 
 # col_hasMutualInformation
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasMutualInformation returns proper result", {
+  NULL
+})
 
 # col_hasHistogramValue
-#test_that("", {
-#  expect_equal(,)
-#})
+test_that("col_hasHistogramValue returns proper result", {
+  NULL
+})
 
 # col_hasCorrelation
 test_that("col_hasCorrelation returns proper result", {
@@ -392,13 +396,14 @@ test_that("col_hasCorrelation returns proper result", {
     b = 10:1,
     c = sample.int(10, 10)
   )
-  expect_equal(col_hasCorrelation(data, "a", "a", udf_eq(1)),TRUE)
-  expect_equal(col_hasCorrelation(data, "a", "b", udf_eq(-1)),TRUE)
-  expect_equal(col_hasCorrelation(data, "a", "c", udf_eq(cor(data$a, data$c))),TRUE)
+  expect_equal(col_hasCorrelation(data, "a", "a", udf_eq(1)), TRUE)
+  expect_equal(col_hasCorrelation(data, "a", "b", udf_eq(-1)), TRUE)
+  expect_equal(
+    col_hasCorrelation(data, "a", "c", udf_eq(cor(data$a, data$c))),
+    TRUE)
 })
 
 # col_hasNoAnomalies
-#test_that("", {
-#  expect_equal(,)
-#})
-
+test_that("col_hasNoAnomalies returns proper result", {
+  NULL
+})

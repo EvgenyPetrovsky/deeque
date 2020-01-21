@@ -40,6 +40,42 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "Devtools: Lint",
+            "type": "shell",
+            "command": "R -q -e 'lintr::lint_package(cache = TRUE)'",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                {
+                    "owner": "R",
+                    "fileLocation": ["relative", "${cwd}"],
+                    "pattern": {
+                        "regexp": "^(.*[^:]):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "message": 5
+                    }
+                },
+                {
+                    "owner": "R",
+                    "fileLocation": ["relative", "${cwd}"],
+                    "severity": "info",
+                    "pattern": {
+                        "regexp": "^(.*[^:]):(\\d+):(\\d+):\\s+(style):\\s+(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "message": 5
+                    }
+                }
+            ]
         }
     ]
 }

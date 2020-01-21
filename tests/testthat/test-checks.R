@@ -1,5 +1,5 @@
 test_that("severity rank is equal to label position in the list", {
-  for (i in 1:length(severity)) {
+  for (i in seq_len(length(severity))) {
     slabel <- severity[[i]]
     srank  <- i
     expect_equal(severity_rank(slabel), srank)
@@ -38,22 +38,27 @@ test_that("function new check fails if no description provided", {
 
 test_that("Function new_check fails if no severity defined", {
   expect_error(
-    new_check(description = "test", function_name = col_isComplete, column = "a"),
+    new_check(
+      description = "test",
+      function_name = col_isComplete, column = "a"),
     message = "severity.+ missing"
   )
 })
 
 test_that("Function new_check fails if severity is invalid", {
-  #new_check(description = "test", severity = "JOKE", function_name = col_isComplete, column = "a")
   expect_error(
-    new_check(description = "test", severity = "JOKE", function_name = col_isComplete, column = "a"),
+    new_check(
+      description = "test", severity = "JOKE",
+      function_name = col_isComplete, column = "a"),
     message = "severity.+valid.deequee::severity"
   )
 })
 
-#test_that("Function new_check fails if function is not defined", {})
+test_that("Function new_check fails if function is not defined", {
+  NULL
+})
 
-test_that("Function new check returns object with elements 'description', 'severity', 'function_name', 'parameters'", {
+test_that("Function new check creates object with required elements", {
   c <- new_check("Test", "INFO", "column_1", deeque::col_isComplete)
   attr <- c("description", "severity", "function_name", "parameters")
   expect_equal(all(attr %in% names(c)), TRUE)
@@ -67,9 +72,11 @@ test_that("Function add_check increases number of elements in group by 1", {
   expect_equal(length(g1), 1)
 })
 
-#test_that("only check can be included into group")
+test_that("only check can be included into group", {
+  NULL
+})
 
-test_that("new checks for columns returns list of length equal to number of column names", {
+test_that("new_checks_for_columns for N (number) columns returns N checks", {
   columns <- c("A", "B", "C")
   checks  <- new_checks_for_columns(
     columns = columns,
@@ -80,7 +87,7 @@ test_that("new checks for columns returns list of length equal to number of colu
   expect_equal(length(checks), 3)
 })
 
-test_that("add list of n checks into group of x returns group of length x + n", {
+test_that("add list of n checks into group of x returns group of length x+n", {
   g0 <- new_group()
   columns <- c("A", "B", "C")
   checks  <- new_checks_for_columns(

@@ -55,7 +55,7 @@ tab_hasColumns <- function(data, columns) {
 #' @export
 #' @param data dataframe
 #' @param columns vector of column names that must contain unique value
-tab_hasUniqueKey <- function(data, columns){
+tab_hasUniqueKey <- function(data, columns) {
   stop_if_miss_columns(data, columns)
   if (nrow(data) == 0) {
     stop("Data frame has 0 rows, uniqueness can't be checked")

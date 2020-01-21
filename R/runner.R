@@ -1,7 +1,8 @@
 #' Apply checks to dataset and return dataframe
 #'
-#' Apply group of checks to dataset. Function returns check results. In case when
-#' \code{stop_condition} is specified function stops execution when
+#' Apply group of checks to dataset. Function returns check results. In case
+#' when \code{stop_condition} is specified function stops execution when result
+#' is FALSE
 #'
 #' @export
 #'
@@ -10,7 +11,7 @@
 #' @param condition function that takes check_result
 #'   and returns TRUE / FALSE where FALSE halts execution.
 run_checks <- function(data, checks, condition = NULL) {
-    check_result <- Map(f = function(check) {apply_check(data, check)}, checks)
+    check_result <- Map(f = function(check) apply_check(data, check), checks)
     res <- if (!is.null(condition)) {
         analyze_run(check_result, condition)
     } else {
@@ -67,7 +68,8 @@ run_checks_and_proceed <- function(data, checks, condition) {
 #' @param severity - severity text label (INFO, WARNING, ERROR)
 severity_at_threshold <- function(severity) {
     function(check_results) {
-        check_sev_ranks <- severity_rank(check_result_info(check_results, "severity"))
+        check_sev_ranks <- severity_rank(
+            check_result_info(check_results, "severity"))
         input_sev_rank  <- severity_rank(severity)
         check_success   <- check_result_info(check_results, "check_success")
         all(check_sev_ranks <= input_sev_rank | check_success == TRUE)
@@ -84,7 +86,8 @@ severity_at_threshold <- function(severity) {
 #' @param severity - severity text label (INFO, WARNING, ERROR)
 severity_under_threshold <- function(severity) {
     function(check_results) {
-        check_sev_ranks <- severity_rank(check_result_info(check_results, "severity"))
+        check_sev_ranks <- severity_rank(
+            check_result_info(check_results, "severity"))
         input_sev_rank  <- severity_rank(severity)
         check_success   <- check_result_info(check_results, "check_success")
         all(check_sev_ranks < input_sev_rank | check_success == TRUE)
@@ -101,25 +104,26 @@ severity_under_threshold <- function(severity) {
 #' @param severity - severity text label (INFO, WARNING, ERROR)
 severity_above_threshold <- function(severity) {
     function(check_results) {
-        check_sev_ranks <- severity_rank(check_result_info(check_results, "severity"))
+        check_sev_ranks <- severity_rank(
+            check_result_info(check_results, "severity"))
         input_sev_rank  <- severity_rank(severity)
         check_success   <- check_result_info(check_results, "check_success")
         all(check_sev_ranks > input_sev_rank | check_success == TRUE)
     }
 }
 
-#' Select check result attribute from check run results as return vector of values
+#' Select specified attribute from check results as return vector of its values
 #'
 #' @param check_result list of check application outcomes (\code{apply_check})
 #' @param attribute attribute name
 check_result_info <- function(check_result, attribute) {
-    if(is.null(check_result)) {
+    if (is.null(check_result)) {
         c()
     } else if (is.data.frame(check_result)) {
         check_result[[attribute]]
     } else {
         res <- sapply(
-            FUN = function(x) {x[[attribute]]},
+            FUN = function(x) x[[attribute]],
             X = check_result, simplify = TRUE)
         res
     }

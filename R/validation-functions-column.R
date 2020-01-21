@@ -42,8 +42,11 @@ col_isUnique <- function(data, column) {
 
 #' Assess uniqueness of column values with user-defined function
 #'
-#' Uniqueness is defined by formula |{v belongs to V | cv = 1}| / |V| where V is total set of values that column takes, v - exact value, cv - values count in column
-#' In other words - number of values that occur only 1 time divided by total number of possible values. For example uniqueness of [1, 2, 2, 3] is 2/3
+#' Uniqueness is defined by formula |{v belongs to V | cv = 1}| / |V| where V is
+#' total set of values that column takes, v - exact value, cv - values count in
+#' column
+#' In other words - number of values that occur only 1 time divided by total
+#' number of possible values. For example uniqueness of [1, 2, 2, 3] is 2/3
 #'
 #' @export
 #' @param data dataframe
@@ -64,7 +67,8 @@ col_hasUniqueness <- function(data, column, udf) {
 
 #' Assess distinctness of column values with user-defined function
 #'
-#' Distinctness is defined by formula |V| / N where V is is total set of values that column takes, N is number of values in column.
+#' Distinctness is defined by formula |V| / N where V is is total set of values
+#' that column takes, N is number of values in column.
 #'
 #' @export
 #' @param data dataframe
@@ -152,7 +156,8 @@ col_isLessThan <- function(data, column, ref_column) {
     r
 }
 
-#' validation whether values in the 1s column are not less than in the 2nd column
+#' validation whether values in the 1s column are not less than in the 2nd
+#' column
 #'
 #' @export
 #' @param data dataframe
@@ -281,13 +286,13 @@ col_hasType <- function(
   type <- match.arg(type)
   stop_if_miss_columns(data, column)
   r <- with(list(col = data[[column]]), {
-    if (type == "Date" & is.numeric.Date(col)) {TRUE}
-    else if (type == "numeric" & is.numeric(col)) {TRUE}
-    else if (type == "integer" & is.integer(col)) {TRUE}
-    else if (type == "logical" & is.logical(col)) {TRUE}
-    else if (type == "character" & is.character(col)) {TRUE}
-    else if (type == "factor" & is.factor(col)) {TRUE}
-    else {FALSE}
+    if (type == "Date" & is.numeric.Date(col)) TRUE
+    else if (type == "numeric" & is.numeric(col)) TRUE
+    else if (type == "integer" & is.integer(col)) TRUE
+    else if (type == "logical" & is.logical(col)) TRUE
+    else if (type == "character" & is.character(col)) TRUE
+    else if (type == "factor" & is.factor(col)) TRUE
+    else FALSE
   })
   r
 }
@@ -389,7 +394,11 @@ col_hasQuantile <- function(data, column, probability, udf) {
     }
     vals <- data[[column]]
     if (probability < 0 | probability > 1) {
-        stop(paste("probability has value", probability, "but it must be in range 0..1"))
+        message <- paste(
+            "probability has value",
+            probability,
+            "but it must be in range 0..1")
+        stop(message)
     }
     qv <- stats::quantile(vals, probability, na.rm = T, names = F)
     r <- udf(qv)
@@ -410,7 +419,7 @@ col_hasEntropy <- function(data, column, udf) {
     func <- function(x) {
         cv <- length(NV[x])
         size <- N
-        return(cv/size * log(cv/size))
+        return(cv / size * log(cv / size))
     }
     entropy <- sum(sapply(FUN = func, X = names(NV)))
     r <- udf(entropy)
@@ -418,22 +427,22 @@ col_hasEntropy <- function(data, column, udf) {
 }
 
 #
-col_hasMutualInformation <- function(data, column, ref_column, udf ) {
+col_hasMutualInformation <- function(data, column, ref_column, udf) {
     stop_if_not_implemented("col_hasMutualInformation", not_implemented = TRUE)
-    vals1 <- data[[column]]
-    vals2 <- data[[ref_column]]
-    # dataset size
-    N <- length(vals1)
-    # unique values as vector names and their counts as vector values
-    NV1 <- table(vals1)
-    NV2 <- table(vals2)
-    pairs <- list()
-    #func <- function(x){
-    #    cv <- length(NV[as.character()])
-    #    size <- N
-    #    return(cv/size * log(cv/size))
-    #}
-    #r <- udf(mutual_info)
+    #vals1 <- data[[column]]
+    #vals2 <- data[[ref_column]]
+    ## dataset size
+    #N <- length(vals1)
+    ## unique values as vector names and their counts as vector values
+    #NV1 <- table(vals1)
+    #NV2 <- table(vals2)
+    #pairs <- list()
+    ##func <- function(x) {
+    ##    cv <- length(NV[as.character()])
+    ##    size <- N
+    ##    return(cv/size * log(cv/size))
+    ##}
+    ##r <- udf(mutual_info)
     NULL
 }
 
